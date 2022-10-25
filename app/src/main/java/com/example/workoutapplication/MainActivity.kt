@@ -8,7 +8,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     private fun updateUi() {
-        binding.clickMe.text = "This is diff2"
+        binding.clickMe.text = "Push."
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
