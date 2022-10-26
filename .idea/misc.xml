@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_main.xml" value="0.15052083333333333" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_set_workout_info.xml" value="0.29583333333333334" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_sub.xml" value="0.2264151024877837" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/layout.xml" value="0.20969202898550723" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/sub_list_view.xml" value="0.4528302049755674" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>
