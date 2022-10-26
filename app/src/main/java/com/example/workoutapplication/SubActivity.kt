@@ -29,6 +29,7 @@ class SubActivity : AppCompatActivity() {
         subBinding.listView.setOnItemClickListener { parent, view, position, id ->
             val selectItem = parent.getItemAtPosition(position) as Exercise
 
+//          intent를 통해 다음 화면에 전달합니다.
             val intent = Intent(this, SetWorkoutInfo::class.java)
             intent.putExtra("workoutName", selectItem.name.toString())
             startActivity(intent)
