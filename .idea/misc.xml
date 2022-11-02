@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_main.xml" value="0.15052083333333333" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/drawable/border.xml" value="0.1" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/drawable/ic_baseline_help_outline_24.xml" value="0.1" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_main.xml" value="0.2264151024877837" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_preparation.xml" value="0.1" />
         <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_set_workout_info.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/activity_sub.xml" value="0.2264151024877837" />
         <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/layout.xml" value="0.20969202898550723" />
-        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/sub_list_view.xml" value="0.4528302049755674" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/layout/sub_list_view.xml" value="0.2988679352838745" />
+        <entry key="..\:/Users/choiy/AndroidStudioProjects/WorkoutApplication/app/src/main/res/menu/navi_menu.xml" value="0.2988679352838745" />
       </map>
     </option>
   </component>

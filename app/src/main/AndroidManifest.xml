@@ -11,13 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WorkoutApplication"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".SetWorkoutInfo"
-            android:exported="false" />
-        <activity
-            android:name=".SubActivity"
+            android:name=".PreparationActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
