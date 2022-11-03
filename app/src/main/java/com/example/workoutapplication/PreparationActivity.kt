@@ -1,48 +1,59 @@
 package com.example.workoutapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapplication.databinding.ActivityPreparationBinding
+import com.google.android.material.tabs.TabLayout
 
 class PreparationActivity : AppCompatActivity() {
-    lateinit var preBinding: ActivityPreparationBinding
 
-    var todayList = arrayListOf<Exercise>(
-        // 데이터베이스를 설립 후 초기에는 빈 리스트를 전달
-        // 이후 add를 통해 원하는 item 추가
-        Exercise(R.drawable.bench_press, "Bench Press", 80, "Chest"),
-        Exercise(R.drawable.squat, "Squat", 80, "Chest"),
-        Exercise(R.drawable.deadlift, "Dead lift", 80, "Chest"),
-    )
+    object List {
+        var workoutList = arrayListOf(
+            Exercise(R.drawable.bench_press, "Bench Press", 80, "Chest"),
+            Exercise(R.drawable.squat, "Squat", 80, "Chest"),
+            Exercise(R.drawable.deadlift, "Dead lift", 80, "Chest")
+        )
+
+        var dietList = arrayListOf(
+            Diet(name = "Rice", description = "Test_description", ingredient = 60, weight = 100),
+            Diet(name = "Chicken Breast", description = "Test_description", ingredient = 60, weight = 100),
+            Diet(name = "Brocoli", description = "Test_description", ingredient = 60, weight = 100)
+        )
+    }
+
+    private lateinit var preBinding: ActivityPreparationBinding
+
+    private fun initFragmentUi() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.main_frame, WorkoutFragment()).commit()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preBinding = ActivityPreparationBinding.inflate(layoutInflater)
         setContentView(preBinding.root)
 
-//        val adapter = ExerciseAdapter(this, todayList)
-//        preBinding.listView.adapter = adapter
-//        preBinding.listView.setOnItemClickListener { parent, view, position, id ->
-//            val selectItem = parent.getItemAtPosition(position) as Exercise
-//
-//            Toast.makeText(this, selectItem.name, Toast.LENGTH_SHORT).show()
-//        }
+        initFragmentUi()
 
-        // rvList의 layoutManager 변경
-        preBinding.rvList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        preBinding.rvList.setHasFixedSize(true)
+        preBinding.tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val transaction = supportFragmentManager.beginTransaction()
+                when (tab?.text) {
+                    "Workout" -> transaction.replace(R.id.main_frame, WorkoutFragment())
+                    "Diet" -> transaction.replace(R.id.main_frame, DietFragment())
+                }
+                transaction.commit()
+            }
 
-        // adapter 연결
-        preBinding.rvList.adapter = ExerciseAdapter(todayList)
-        preBinding.rvList.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
 
-        preBinding.btnAdd.setOnClickListener {
-            todayList.add(Exercise(name = "Test Name", weight = 0, description = "Test Description"))
-            preBinding.rvList.adapter = ExerciseAdapter(todayList)
-        }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+
     }
 }
