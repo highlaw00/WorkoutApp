@@ -37,10 +37,10 @@ class DietAdapter(val exerciseList: ArrayList<Diet>) : RecyclerView.Adapter<Diet
     }
 
     class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val img = itemView.findViewById<ImageView>(R.id.iv_profile) // 운동 사진
-        val name = itemView.findViewById<TextView>(R.id.tv_diet_name) // 이름
+        val img = itemView.findViewById<ImageView>(R.id.iv_workout_image) // 운동 사진
+        val name = itemView.findViewById<TextView>(R.id.tv_workout_name) // 이름
         val weight = itemView.findViewById<TextView>(R.id.tv_diet_weight) // 중량
-        val desc = itemView.findViewById<TextView>(R.id.tv_diet_desc) // 설명
+        val desc = itemView.findViewById<TextView>(R.id.tv_workout_desc) // 설명
         val ingredient = itemView.findViewById<TextView>(R.id.tv_diet_ingredients) // 칼로리
     }
 }

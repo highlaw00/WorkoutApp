@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_profile"
+            android:id="@+id/iv_workout_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="8dp"
@@ -26,7 +26,7 @@
             app:srcCompat="@drawable/ic_diet_basic" />
 
         <TextView
-            android:id="@+id/tv_diet_name"
+            android:id="@+id/tv_workout_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -34,12 +34,12 @@
             android:text="Food Name"
             android:textColor="#000000"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tv_diet_desc"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
-            app:layout_constraintTop_toTopOf="@+id/iv_profile" />
+            app:layout_constraintBottom_toTopOf="@+id/tv_workout_desc"
+            app:layout_constraintStart_toEndOf="@+id/iv_workout_image"
+            app:layout_constraintTop_toTopOf="@+id/iv_workout_image" />
 
         <TextView
-            android:id="@+id/tv_diet_desc"
+            android:id="@+id/tv_workout_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -48,9 +48,9 @@
             android:text="Chest"
             android:textColor="#000000"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
-            app:layout_constraintTop_toBottomOf="@+id/tv_diet_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_workout_image"
+            app:layout_constraintStart_toEndOf="@+id/iv_workout_image"
+            app:layout_constraintTop_toBottomOf="@+id/tv_workout_name" />
 
         <TextView
             android:id="@+id/tv_diet_weight"
@@ -60,9 +60,9 @@
             android:text="100"
             android:textColor="#FF0000"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_diet_name"
-            app:layout_constraintStart_toEndOf="@+id/tv_diet_name"
-            app:layout_constraintTop_toTopOf="@+id/tv_diet_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_workout_name"
+            app:layout_constraintStart_toEndOf="@+id/tv_workout_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_workout_name" />
 
         <TextView
             android:id="@+id/tv_diet_ingredients"
@@ -70,8 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="80"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_diet_desc"
-            app:layout_constraintStart_toEndOf="@+id/tv_diet_desc" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_workout_desc"
+            app:layout_constraintStart_toEndOf="@+id/tv_workout_desc" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

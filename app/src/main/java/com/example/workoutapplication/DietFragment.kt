@@ -26,12 +26,12 @@ class DietFragment : Fragment() {
         val binding = FragmentDietBinding.bind(view)
 
         // Fragment에서 전달받은 list를 넘기면서 ListAdapter 생성
-        binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        binding.rvList.setHasFixedSize(true)
+        binding.rvDietList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.rvDietList.setHasFixedSize(true)
 
         // adapter 연결
-        binding.rvList.adapter = DietAdapter(PreparationActivity.List.dietList)
-        binding.rvList.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+        binding.rvDietList.adapter = DietAdapter(PreparationActivity.List.dietList)
+        binding.rvDietList.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
     }
 
     companion object {

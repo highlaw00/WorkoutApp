@@ -1,6 +1,5 @@
 package com.example.workoutapplication
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,16 +16,20 @@ class PreparationActivity : AppCompatActivity() {
 
 
     object List {
+        val BenchSetList = arrayListOf(Sets(10,80.0), Sets(10,80.0), Sets(10,80.0))
+        val SquatSetList = arrayListOf(Sets(5,100.0), Sets(3,110.0), Sets(1,120.0))
+        val DeadSetList = arrayListOf(Sets(8,110.0), Sets(8,115.0), Sets(8,115.0))
+
         var workoutList = arrayListOf(
-            Exercise(R.drawable.bench_press, "Bench Press", 80, "Chest"),
-            Exercise(R.drawable.squat, "Squat", 80, "Chest"),
-            Exercise(R.drawable.deadlift, "Dead lift", 80, "Chest")
+            Exercise(R.drawable.bench_press, "Bench Press",  "Chest", BenchSetList),
+            Exercise(R.drawable.squat, "Squat",  "Legs", SquatSetList),
+            Exercise(R.drawable.deadlift, "Dead lift", "Legs", DeadSetList)
         )
 
         var dietList = arrayListOf(
             Diet(name = "Rice", description = "Test_description", ingredient = 60, weight = 100),
             Diet(name = "Chicken Breast", description = "Test_description", ingredient = 60, weight = 100),
-            Diet(name = "Brocoli", description = "Test_description", ingredient = 60, weight = 100)
+            Diet(name = "Broccoli", description = "Test_description", ingredient = 60, weight = 100)
         )
     }
 
