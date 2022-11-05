@@ -23,6 +23,9 @@ class PreparationActivity : AppCompatActivity() {
         var workoutList = arrayListOf(
             Exercise(R.drawable.bench_press, "Bench Press",  "Chest", BenchSetList),
             Exercise(R.drawable.squat, "Squat",  "Legs", SquatSetList),
+            Exercise(R.drawable.deadlift, "Dead lift", "Legs", DeadSetList),
+            Exercise(R.drawable.bench_press, "Bench Press",  "Chest", BenchSetList),
+            Exercise(R.drawable.squat, "Squat",  "Legs", SquatSetList),
             Exercise(R.drawable.deadlift, "Dead lift", "Legs", DeadSetList)
         )
 
