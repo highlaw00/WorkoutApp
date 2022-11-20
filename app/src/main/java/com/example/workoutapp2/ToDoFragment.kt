@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.workoutapp2.databinding.FragmentToDoBinding
+import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ToDoFragment : Fragment() {
+    val viewModel: ExerciseViewModel by activityViewModels()
     var keyData: String? = null
     var currentDate: String? = null
     var binding: FragmentToDoBinding? = null
@@ -54,12 +57,14 @@ class ToDoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // todo: get Data From Database and show it
+        val toDoList: List<Exercise> = listOf()
+
 
         // 아래 코드는 tablayout에 ViewPager2 와 Fragment 를 적용한 코드입니다.
         val viewPager: ViewPager2? = binding?.vpTodoList
         val tabLayout: TabLayout? = binding?.tabLayout
 
-        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 0) }
+        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 0, toDoList) }
         viewPager?.adapter = viewPagerFragmentAdapter
 
         val tabTitles = listOf<String>("운동", "식단")

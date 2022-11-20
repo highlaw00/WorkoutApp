@@ -2,14 +2,23 @@ package com.example.workoutapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.workoutapp2.databinding.ActivityMainBinding
+import com.example.workoutapp2.viewmodel.ExerciseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var appBarConfiguration: AppBarConfiguration
+    val viewModel: ExerciseViewModel by viewModels()
 
     private fun checkKey(): Boolean {
         val pref = getSharedPreferences("KEY_PREF",0)
@@ -36,11 +45,12 @@ class MainActivity : AppCompatActivity() {
         val navController = binding.frgNav.getFragment<NavHostFragment>().navController
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.startFragment)
+            setOf(R.id.entryFragment)
         )
 
         if (!checkKey()) DataBaseEntry.setUnni(makeKey())
         else DataBaseEntry.setUnni(getKey())
+
 
 
         setContentView(binding.root)

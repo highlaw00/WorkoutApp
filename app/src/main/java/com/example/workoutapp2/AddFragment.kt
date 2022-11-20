@@ -2,6 +2,7 @@ package com.example.workoutapp2
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,12 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.workoutapp2.databinding.AddDialogBinding
 import com.example.workoutapp2.databinding.FragmentAddBinding
+import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.CollectionReference
@@ -22,6 +26,19 @@ class AddFragment : Fragment() {
     var binding: FragmentAddBinding? = null
     var mainColRef: CollectionReference? = null
     var customColRef: CollectionReference? = null
+    val viewModel: ExerciseViewModel by viewModels()
+
+//    private fun getExerciseResponseLiveData() {
+//        viewModel.getResponse().observe(viewLifecycleOwner) {
+//            showResponse(it)
+//        }
+//    }
+
+    private fun showResponse(response: ExerciseResponse?) {
+        for (elem in response?.workouts!!) {
+            Log.d("yool", elem.toString())
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +56,42 @@ class AddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         // todo: tab layout 설정
         val viewPager: ViewPager2? = binding?.vpList
         val tabLayout: TabLayout? = binding?.tabAddLayout
 
-        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1) }
-        viewPager?.adapter = viewPagerFragmentAdapter
+//        viewModel.mainList.observe(viewLifecycleOwner) { mainList ->
+//            // do what i want to do.
+//            // 뷰 모델의 상태를 뷰에다가 쏴주는 부분
+//            val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1, mainList) }
+//            viewPager?.adapter = viewPagerFragmentAdapter
+//            val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
+//            tabLayout?.let {
+//                if (viewPager != null) {
+//                    TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
+//                }
+//            }
+//        }
 
-        val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
-        tabLayout?.let {
-            if (viewPager != null) {
-                TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
+        viewModel.mainList.observe(viewLifecycleOwner) { mainList ->
+            viewModel.customList.observe(viewLifecycleOwner) { customList ->
+                val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1, mainList + customList) }
+                viewPager?.adapter = viewPagerFragmentAdapter
+                val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
+                tabLayout?.let {
+                    if (viewPager != null) {
+                        TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
+                    }
+                }
             }
+        }
+
+
+
+        // todo: addToList Button 설정
+        binding?.btnAddToTodo?.setOnClickListener {
         }
 
         // todo: addToDb button 설정
@@ -80,7 +121,7 @@ class AddFragment : Fragment() {
                         else -> "Undefined"
                     }
                     val newExercise = Exercise(name = name, part = partString)
-                    customUniqueColRef?.document(name)?.set(newExercise)
+                    viewModel.addToCustom(newExercise)
                     dialog?.dismiss()
                 } else {
                     Toast.makeText(this.context, "운동의 이름과 부위를 선택해주세요.", Toast.LENGTH_SHORT).show()

@@ -2,9 +2,11 @@ package com.example.workoutapp2
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.workoutapp2.viewmodel.ExerciseViewModel
 
-class ViewpagerFragmentAdapter(fragmentActivity: FragmentActivity, id: Int) : FragmentStateAdapter(fragmentActivity) {
+class ViewpagerFragmentAdapter(fragmentActivity: FragmentActivity, id: Int, list: List<Exercise>) : FragmentStateAdapter(fragmentActivity) {
     val fragmentList = when (id) {
         0 -> {
             listOf<Fragment>(
@@ -14,13 +16,13 @@ class ViewpagerFragmentAdapter(fragmentActivity: FragmentActivity, id: Int) : Fr
         }
         1 -> {
             listOf<Fragment>(
-                AddListFragment("All"),
-                AddListFragment("Chest"),
-                AddListFragment("Back"),
-                AddListFragment("Arm"),
-                AddListFragment("Delt"),
-                AddListFragment("Legs"),
-                AddListFragment("Abs"))
+                AddListFragment("All", list),
+                AddListFragment("Chest", list),
+                AddListFragment("Back", list),
+                AddListFragment("Arm", list),
+                AddListFragment("Delts", list),
+                AddListFragment("Legs", list),
+                AddListFragment("Abs", list))
         }
         else -> null
 
