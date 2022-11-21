@@ -75,6 +75,13 @@ class AddFragment : Fragment() {
 //            }
 //        }
 
+        // adapter 에 notify 해줄때 사용함수
+        // adapter.nofityDataSetChanged()
+
+        // observe 안에서 adapter 바꾸지 말 것
+
+        // observe AddFragment가 아닌 AddListFragment에서 진행
+
         viewModel.mainList.observe(viewLifecycleOwner) { mainList ->
             viewModel.customList.observe(viewLifecycleOwner) { customList ->
                 val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1, mainList + customList) }

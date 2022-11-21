@@ -9,7 +9,7 @@ import com.example.workoutapp2.databinding.ListWorkoutMainBinding
 
 class WorkoutMainAdapter(var data: List<Exercise>) : RecyclerView.Adapter<WorkoutMainAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val binding = ListWorkoutMainBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ListWorkoutMainBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         return Holder(binding)
     }
 
