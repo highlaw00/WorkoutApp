@@ -64,7 +64,7 @@ class ToDoFragment : Fragment() {
         val viewPager: ViewPager2? = binding?.vpTodoList
         val tabLayout: TabLayout? = binding?.tabLayout
 
-        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 0, toDoList) }
+        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 0) }
         viewPager?.adapter = viewPagerFragmentAdapter
 
         val tabTitles = listOf<String>("운동", "식단")

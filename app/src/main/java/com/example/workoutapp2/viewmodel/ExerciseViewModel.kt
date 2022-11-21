@@ -10,26 +10,25 @@ class ExerciseViewModel: ViewModel() {
 
     private val repository: ExerciseRepository = ExerciseRepository()
 
-    private val _mainList = MutableLiveData<List<Exercise>>()
-    val mainList: LiveData<List<Exercise>>
-            get() = _mainList
-
-    private val _customList = MutableLiveData<List<Exercise>>()
-    val customList: LiveData<List<Exercise>>
-        get() = _customList
-
+    private val _wholeList = MutableLiveData<ArrayList<Exercise>>(arrayListOf())
+    val wholeList: LiveData<ArrayList<Exercise>>
+        get() = _wholeList
+    private var listOfWholeList: ArrayList<Exercise>? = null
 
     init {
-        repository.observeMainList(_mainList)
-        repository.observeToDoList(_customList)
+        repository.observeWholeList(_wholeList)
     }
 
-    fun getMainExercises(): List<Exercise> {
-        return _mainList.value?.toList() ?: listOf()
+    private fun checkValidation(exercise: Exercise): Boolean {
+        for (element in _wholeList.value!!) {
+            if (element.name == exercise.name) return false
+        }
+        return true
     }
 
     fun addToCustom(exercise: Exercise) {
-//        _customList.value = _customList.value?.plus(listOf(exercise))
         repository.postToCustom(exercise)
     }
+
+
 }

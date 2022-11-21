@@ -28,12 +28,6 @@ class AddFragment : Fragment() {
     var customColRef: CollectionReference? = null
     val viewModel: ExerciseViewModel by viewModels()
 
-//    private fun getExerciseResponseLiveData() {
-//        viewModel.getResponse().observe(viewLifecycleOwner) {
-//            showResponse(it)
-//        }
-//    }
-
     private fun showResponse(response: ExerciseResponse?) {
         for (elem in response?.workouts!!) {
             Log.d("yool", elem.toString())
@@ -80,18 +74,14 @@ class AddFragment : Fragment() {
 
         // observe 안에서 adapter 바꾸지 말 것
 
-        // observe AddFragment가 아닌 AddListFragment에서 진행
+        // observe AddFragment 가 아닌 AddListFragment 에서 진행
 
-        viewModel.mainList.observe(viewLifecycleOwner) { mainList ->
-            viewModel.customList.observe(viewLifecycleOwner) { customList ->
-                val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1, mainList + customList) }
-                viewPager?.adapter = viewPagerFragmentAdapter
-                val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
-                tabLayout?.let {
-                    if (viewPager != null) {
-                        TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
-                    }
-                }
+        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1) }
+        viewPager?.adapter = viewPagerFragmentAdapter
+        val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
+        tabLayout?.let {
+            if (viewPager != null) {
+                TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
             }
         }
 
