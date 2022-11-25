@@ -36,7 +36,8 @@ class ExerciseRepository() {
                     }
                 }
                 tempList?.sortBy { it.name }
-                list.postValue(tempList)
+                list.value = tempList
+                Log.d("debugshow mainRef", "list.value: ${list.value ?: "empty"}")
             }
             override fun onCancelled(error: DatabaseError) {
                 Log.d("yool", error.toString())
@@ -49,9 +50,8 @@ class ExerciseRepository() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val tempList: ArrayList<Exercise>? = list.value
                 snapshot.getValue(Exercise::class.java)?.let { tempList?.add(it) }
-                Log.d("debugshow onchildadded", snapshot.value.toString())
                 tempList?.sortBy { it.name }
-                list.postValue(tempList)
+                list.value = tempList
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {

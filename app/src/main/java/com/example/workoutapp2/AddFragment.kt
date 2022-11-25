@@ -26,7 +26,6 @@ class AddFragment : Fragment() {
     var binding: FragmentAddBinding? = null
     var mainColRef: CollectionReference? = null
     var customColRef: CollectionReference? = null
-    val viewModel: ExerciseViewModel by viewModels()
 
     private fun showResponse(response: ExerciseResponse?) {
         for (elem in response?.workouts!!) {
@@ -50,7 +49,7 @@ class AddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val viewModel: ExerciseViewModel by activityViewModels()
 
         // todo: tab layout 설정
         val viewPager: ViewPager2? = binding?.vpList
@@ -92,6 +91,7 @@ class AddFragment : Fragment() {
         }
 
         // todo: addToDb button 설정
+        // todo: 새로운 운동을 추가할 때, wholeList에 존재한다면 추가할 수 없도록함.
         binding?.btnAddToDb?.setOnClickListener {
             val dialogBinding = AddDialogBinding.inflate(layoutInflater)
             val dialog = this.context?.let { it1 ->
@@ -105,10 +105,8 @@ class AddFragment : Fragment() {
             dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
                 val name = dialogBinding.etName.text.toString()
                 val partId = dialogBinding.rgPart.checkedRadioButtonId
-                val customUniqueColRef = customColRef?.document(DataBaseEntry.UNNI_KEY ?: "Error with key while Add")
-                    ?.collection(DataBaseEntry.CUSTOM_WORKOUT_DIRECTORY_STRING)
                 if (name.isNotBlank() and (partId != -1)){
-                    val partString = when (dialogBinding.root.findViewById<RadioButton>(partId).text) {
+                    val partString = when (dialogBinding.rgPart.findViewById<RadioButton>(partId).text) {
                         "가슴" -> "Chest"
                         "등" -> "Back"
                         "팔" -> "Arm"
@@ -118,8 +116,13 @@ class AddFragment : Fragment() {
                         else -> "Undefined"
                     }
                     val newExercise = Exercise(name = name, part = partString)
-                    viewModel.addToCustom(newExercise)
-                    dialog?.dismiss()
+                    Log.d("debugshow addfragment", "wholeList: ${viewModel.wholeList.value ?: "empty"}")
+                    if (viewModel.isValid(newExercise)) {
+                        viewModel.addToCustom(newExercise)
+                        dialog?.dismiss()
+                    }else {
+                        Toast.makeText(this.context, "이미 존재하는 운동입니다.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(this.context, "운동의 이름과 부위를 선택해주세요.", Toast.LENGTH_SHORT).show()
                 }
