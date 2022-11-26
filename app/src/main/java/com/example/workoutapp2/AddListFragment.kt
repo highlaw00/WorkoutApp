@@ -23,6 +23,8 @@ class AddListFragment(val part: String) : Fragment() {
 
     private val viewModel: ExerciseViewModel by activityViewModels()
 
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_list, container, false)
     }
@@ -39,16 +41,30 @@ class AddListFragment(val part: String) : Fragment() {
         listByPart = viewModel.getListByPart(part)
         var newAdapter = WorkoutMainAdapter(listByPart)
         addListBinding.rvMainWorkoutList.adapter = newAdapter
+
         newAdapter.setOnItemClickListener(object:  WorkoutMainAdapter.onItemClickListener{
             override fun onItemClick(position: Int, command: CommandSymbol) {
-                Toast.makeText(this@AddListFragment.context, "You Selected $position item to ${if (command == CommandSymbol.ADD) "add" else "remove"}",Toast.LENGTH_SHORT).show()
-
-                this@AddListFragment.context?.let { AlertDialog.Builder(it)
-                    .setMessage("오늘 할 운동에 추가할까요?: ${newAdapter.getItemByPosition(position)?.name}")
-                    .setPositiveButton("추가", null)
-                    .setNegativeButton("취소", null)
-                    .show()
+                if (command == CommandSymbol.ADD) {
+                    val exercise = newAdapter.getItemByPosition(position)
+                    val dialog = this@AddListFragment.context?.let { AlertDialog.Builder(it)
+                        .setMessage("오늘 할 운동에 추가할까요?: ${exercise?.name}")
+                        .setPositiveButton("추가", null)
+                        .setNegativeButton("취소", null)
+                        .show()
+                    }
+                    dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
+                        viewModel.addToDaily(exercise)
+                        dialog?.dismiss()
+                    }
+                }else {
+                    this@AddListFragment.context?.let { AlertDialog.Builder(it)
+                        .setMessage("이 운동을 리스트에서 삭제할까요?: ${newAdapter.getItemByPosition(position)?.name}")
+                        .setPositiveButton("삭제", null)
+                        .setNegativeButton("취소", null)
+                        .show()
+                    }
                 }
+
             }
 
 
@@ -59,16 +75,6 @@ class AddListFragment(val part: String) : Fragment() {
             listByPart = viewModel.getListByPart(part)
             newAdapter.updateList(listByPart)
         }
-    }
-
-    override fun onDestroyView() {
-        Log.d("debug list fragment", "Destroyed View.")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Log.d("debug list fragment", "Destroyed.")
-        super.onDestroy()
     }
 
 }

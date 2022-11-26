@@ -21,32 +21,12 @@ class ToDoFragment : Fragment(){
     var currentDate: String? = null
     var binding: FragmentToDoBinding? = null
 
-    private fun initDataBase(date: String?) {
-        if (date == null) return
-        val uniqueDocRef = FirebaseFirestore.getInstance().collection(DataBaseEntry.DAILY_DB_STRING)
-            .document(DataBaseEntry.UNNI_KEY ?:"Error Document")
-        val dailyDocRef = uniqueDocRef.collection(DataBaseEntry.DAILY_RECORD_INFO_STRING).document(date)
-
-        dailyDocRef.get()
-            .addOnSuccessListener { document ->
-                if (document.data == null) {
-                    dailyDocRef.set(mapOf("isEmpty" to true))
-                } else {
-                    Log.d("yool", "Document id: ${document.id}, data: ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("yool", "Failed with",exception)
-            }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             keyData = it.getString("KEY")
             currentDate = it.getString("DATE")
         }
-        initDataBase(currentDate)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,13 +37,10 @@ class ToDoFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 아래 코드는 tablayout에 ViewPager2 와 Fragment 를 적용한 코드입니다.
         val viewPager: ViewPager2? = binding?.vpTodoList
         val tabLayout: TabLayout? = binding?.tabLayout
-
         val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 0)
         viewPager?.adapter = viewPagerFragmentAdapter
-
 
         val tabTitles = listOf("운동", "식단")
         tabLayout?.let {

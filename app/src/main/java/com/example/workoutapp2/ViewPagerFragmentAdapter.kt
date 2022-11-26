@@ -9,7 +9,7 @@ import com.example.workoutapp2.viewmodel.ExerciseViewModel
 class ViewpagerFragmentAdapter(parentFragment: Fragment/*fragmentActivity: FragmentActivity*/, id: Int) : /*FragmentStateAdapter(fragmentActivity)*/ FragmentStateAdapter(parentFragment){
     val fragmentList = when (id) {
         0 -> {
-            listOf<Fragment>(
+            listOf(
                 WorkoutFragment(),
                 DietFragment()
             )

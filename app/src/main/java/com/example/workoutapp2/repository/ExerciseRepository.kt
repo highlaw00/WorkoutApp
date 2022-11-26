@@ -22,6 +22,11 @@ class ExerciseRepository() {
         customRef.child(key ?: "ID Error").child(exercise.name!!).setValue(exercise)
     }
 
+    fun postToDaily(exercise: Exercise?, date: String) {
+        val key = DataBaseEntry.UNNI_KEY
+        dailyRef.child(key ?: "ID Error").child(date).child(exercise?.name!!).setValue(exercise)
+    }
+
     fun observeWholeList(list: MutableLiveData<ArrayList<Exercise>>) {
         // 전체 리스트를 observe하며 바뀐것이 있으면 call back을 해줍니다.
         // livedata 의 class 를 list 나 arraylist로 하는 경우 add를 통해 새로운 원소를 삽입하는데 이는 observer를 작동시키지 않는다!
@@ -75,6 +80,7 @@ class ExerciseRepository() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val tempList: ArrayList<Exercise>? = list.value
                 snapshot.getValue(Exercise::class.java)?.let { tempList?.add(it) }
+                Log.d("debugshow todo", "${tempList.toString()}")
                 list.value = tempList
             }
 
@@ -92,4 +98,6 @@ class ExerciseRepository() {
 
         })
     }
+
+
 }

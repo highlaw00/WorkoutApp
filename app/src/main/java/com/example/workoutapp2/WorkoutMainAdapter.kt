@@ -10,8 +10,6 @@ class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
 
     private lateinit var myListener: onItemClickListener
 
-
-
     interface onItemClickListener {
         fun onItemClick(position: Int, command: CommandSymbol)
     }
@@ -42,7 +40,7 @@ class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val exercise = data?.get(position)
         if (exercise != null) {
-            holder.bind(exercise, position)
+            holder.bind(exercise)
         }
     }
 
@@ -54,9 +52,10 @@ class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
         var img = binding.ivWorkoutImageMain
         var name = binding.tvWorkoutNameMain
 
-        fun bind(exercise: Exercise, pos: Int) {
-            this.name.text = exercise.name
-            this.img.setImageResource(exercise.img)
+        fun bind(exercise: Exercise) {
+            name.text = exercise.name
+            img.setImageResource(exercise.img)
+
             binding.btnWorkoutAddMain.setOnClickListener {
                 listener.onItemClick(adapterPosition, CommandSymbol.ADD)
             }

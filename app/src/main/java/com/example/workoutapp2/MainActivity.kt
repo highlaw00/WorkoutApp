@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         if (!checkKey()) DataBaseEntry.setUnni(makeKey())
         else DataBaseEntry.setUnni(getKey())
 
+        Log.d("ic_test", "basic: ${R.drawable.ic_basic}")
+        Log.d("ic_test", "basic: ${R.drawable.ic_add}")
 
 
         setContentView(binding.root)

@@ -50,21 +50,13 @@ class AddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // todo: tab layout 설정
+
         val viewPager: ViewPager2? = binding?.vpList
         val tabLayout: TabLayout? = binding?.tabAddLayout
 
-        // adapter 에 notify 해줄때 사용함수
-        // adapter.nofityDataSetChanged()
-
-        // observe 안에서 adapter 바꾸지 말 것
-
-        // observe AddFragment 가 아닌 AddListFragment 에서 진행
-
-        //val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1) }
         val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 1)
         viewPager?.adapter = viewPagerFragmentAdapter
-        val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
+        val tabTitles = listOf("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
         tabLayout?.let {
             if (viewPager != null) {
                 TabLayoutMediator(it, viewPager) { tab, position ->

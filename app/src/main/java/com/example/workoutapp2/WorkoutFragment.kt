@@ -35,17 +35,18 @@ class WorkoutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var listToDo: MutableList<Exercise>? = null
 
-        listToDo = viewModel.todoList.value
-        val newAdapter = WorkoutToDoAdapter(listToDo)
-
         binding?.rvWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
         binding?.rvWorkoutList?.setHasFixedSize(true)
+
+        listToDo = viewModel.todoList.value?.toMutableList()
+        val newAdapter = WorkoutToDoAdapter(listToDo)
 
         binding?.rvWorkoutList?.adapter = newAdapter
         binding?.rvWorkoutList?.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
 
         viewModel.todoList.observe(viewLifecycleOwner) { todoList ->
-            listToDo = viewModel.todoList.value
+            listToDo = viewModel.todoList.value?.toMutableList()
+            Log.d("debugshow todo Fragment", "${listToDo.toString()}")
             newAdapter.updateList(listToDo)
         }
     }

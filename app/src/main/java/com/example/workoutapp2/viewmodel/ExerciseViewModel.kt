@@ -56,4 +56,8 @@ class ExerciseViewModel: ViewModel() {
         }
         return true
     }
+
+    fun addToDaily(exercise: Exercise?) {
+        repository.postToDaily(exercise, currentSelectedDate)
+    }
 }
