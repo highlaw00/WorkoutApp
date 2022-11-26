@@ -18,7 +18,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var appBarConfiguration: AppBarConfiguration
-    val viewModel: ExerciseViewModel by viewModels()
 
     private fun checkKey(): Boolean {
         val pref = getSharedPreferences("KEY_PREF",0)

@@ -15,15 +15,23 @@ class ExerciseViewModel: ViewModel() {
     val wholeList: LiveData<ArrayList<Exercise>>
         get() = _wholeList
 
+    private val _todoList = MutableLiveData<ArrayList<Exercise>>(arrayListOf())
+    val todoList: LiveData<ArrayList<Exercise>>
+        get() = _todoList
+
+    private lateinit var currentSelectedDate: String
+
     init {
         repository.observeWholeList(_wholeList)
     }
 
-    private fun checkValidation(exercise: Exercise): Boolean {
-        for (element in _wholeList.value!!) {
-            if (element.name == exercise.name) return false
-        }
-        return true
+    private fun observeToDoByDate(date:String) {
+        repository.observeToDoList(_todoList, date)
+    }
+
+    fun setDate(date: String) {
+        currentSelectedDate = date
+        observeToDoByDate(currentSelectedDate)
     }
 
     fun addToCustom(exercise: Exercise) {
@@ -44,20 +52,8 @@ class ExerciseViewModel: ViewModel() {
         Log.d("debugshow", "wholeList: ${_wholeList.value ?: "empty"}")
         for (exercise in _wholeList.value!!) {
             Log.d("debugshow", "exercise: ${exercise.name}")
-            if (newExercise.name == exercise?.name)
-                Log.d("debugshow", "new: ${newExercise.name}, exercise: ${exercise.name}")
-                return false
+            if (newExercise.name == exercise?.name) return false
         }
         return true
     }
-
-//    fun getWholeListByPart(part: String) {
-//        val filteredByPart:LiveData<ArrayList<Exercise>> = when (part) {
-//            "All" -> _wholeList
-//            else -> _wholeList.value.filter {
-//
-//            }
-//        }
-//    }
-
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp2.databinding.FragmentWorkoutBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
@@ -32,11 +33,20 @@ class WorkoutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.setToDo()
-//        binding?.rvWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
-//        binding?.rvWorkoutList?.adapter = WorkoutToDoAdapter(viewModel.toDoList.value?.workouts)
-//        viewModel.toDoList.observe(viewLifecycleOwner) {
-//
-//        }
+        var listToDo: MutableList<Exercise>? = null
+
+        listToDo = viewModel.todoList.value
+        val newAdapter = WorkoutToDoAdapter(listToDo)
+
+        binding?.rvWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
+        binding?.rvWorkoutList?.setHasFixedSize(true)
+
+        binding?.rvWorkoutList?.adapter = newAdapter
+        binding?.rvWorkoutList?.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+
+        viewModel.todoList.observe(viewLifecycleOwner) { todoList ->
+            listToDo = viewModel.todoList.value
+            newAdapter.updateList(listToDo)
+        }
     }
 }

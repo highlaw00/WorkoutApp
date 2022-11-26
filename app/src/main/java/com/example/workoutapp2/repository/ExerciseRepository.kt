@@ -15,6 +15,7 @@ class ExerciseRepository() {
     private val database = Firebase.database
     private val mainRef = database.getReference("main")
     private val customRef = database.getReference("custom")
+    private val dailyRef = database.getReference("daily")
 
     fun postToCustom(exercise: Exercise) {
         val key = DataBaseEntry.UNNI_KEY
@@ -65,6 +66,30 @@ class ExerciseRepository() {
 
             override fun onCancelled(error: DatabaseError) {
             }
+        })
+    }
+
+    fun observeToDoList(list: MutableLiveData<ArrayList<Exercise>>, date: String) {
+        val key = DataBaseEntry.UNNI_KEY
+        dailyRef.child(key ?: "ID Error.").child(date).addChildEventListener(object: ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val tempList: ArrayList<Exercise>? = list.value
+                snapshot.getValue(Exercise::class.java)?.let { tempList?.add(it) }
+                list.value = tempList
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
         })
     }
 }

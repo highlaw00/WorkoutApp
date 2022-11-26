@@ -15,8 +15,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ToDoFragment : Fragment() {
-    val viewModel: ExerciseViewModel by activityViewModels()
+class ToDoFragment : Fragment(){
+    private val viewModel: ExerciseViewModel by activityViewModels()
     var keyData: String? = null
     var currentDate: String? = null
     var binding: FragmentToDoBinding? = null
@@ -56,18 +56,16 @@ class ToDoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // todo: get Data From Database and show it
-        val toDoList: List<Exercise> = listOf()
-
 
         // 아래 코드는 tablayout에 ViewPager2 와 Fragment 를 적용한 코드입니다.
         val viewPager: ViewPager2? = binding?.vpTodoList
         val tabLayout: TabLayout? = binding?.tabLayout
 
-        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 0) }
+        val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 0)
         viewPager?.adapter = viewPagerFragmentAdapter
 
-        val tabTitles = listOf<String>("운동", "식단")
+
+        val tabTitles = listOf("운동", "식단")
         tabLayout?.let {
             if (viewPager != null) {
                 TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
@@ -81,13 +79,5 @@ class ToDoFragment : Fragment() {
         binding?.btnAdd?.setOnClickListener {
             findNavController().navigate(R.id.action_toDoFragment_to_addFragment, bundle)
         }
-    }
-
-    companion object {
-        fun newInstance(param1: String, param2: String) =
-            ToDoFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
     }
 }

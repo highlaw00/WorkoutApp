@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.workoutapp2.databinding.FragmentEntryBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
+import java.time.format.DateTimeFormatter
 
 class EntryFragment : Fragment() {
     val viewModel: ExerciseViewModel by activityViewModels()
@@ -27,9 +28,8 @@ class EntryFragment : Fragment() {
         // entry fragment 단계에서 db에 todoList
         binding?.btnEntryOk?.setOnClickListener {
             val datePicker = binding?.dpEntryDp
-            val currentSelectedDate = datePicker?.year.toString() + (datePicker?.month?.plus(1)).toString() + datePicker?.dayOfMonth.toString()
-            val keyData = DataBaseEntry.UNNI_KEY
-
+            val currentSelectedDate = "${datePicker?.year.toString()}-${(datePicker?.month?.plus(1)).toString()}-${datePicker?.dayOfMonth.toString()}"
+            viewModel.setDate(currentSelectedDate)
             findNavController().navigate(R.id.action_entryFragment_to_toDoFragment2)
         }
     }

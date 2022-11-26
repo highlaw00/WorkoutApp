@@ -21,7 +21,8 @@
         tools:layout="@layout/fragment_to_do" >
         <action
             android:id="@+id/action_toDoFragment_to_addFragment"
-            app:destination="@id/addFragment" />
+            app:destination="@id/addFragment"
+            app:enterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_toDoFragment_to_timerFragment"
             app:destination="@id/timerFragment" />
@@ -30,7 +31,11 @@
         android:id="@+id/addFragment"
         android:name="com.example.workoutapp2.AddFragment"
         android:label="fragment_add"
-        tools:layout="@layout/fragment_add" />
+        tools:layout="@layout/fragment_add" >
+        <action
+            android:id="@+id/action_addFragment_to_toDoFragment"
+            app:destination="@id/toDoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.workoutapp2.TimerFragment"

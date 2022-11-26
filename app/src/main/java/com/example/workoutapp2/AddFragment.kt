@@ -26,6 +26,7 @@ class AddFragment : Fragment() {
     var binding: FragmentAddBinding? = null
     var mainColRef: CollectionReference? = null
     var customColRef: CollectionReference? = null
+    private val viewModel: ExerciseViewModel by activityViewModels()
 
     private fun showResponse(response: ExerciseResponse?) {
         for (elem in response?.workouts!!) {
@@ -49,24 +50,9 @@ class AddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel: ExerciseViewModel by activityViewModels()
-
         // todo: tab layout 설정
         val viewPager: ViewPager2? = binding?.vpList
         val tabLayout: TabLayout? = binding?.tabAddLayout
-
-//        viewModel.mainList.observe(viewLifecycleOwner) { mainList ->
-//            // do what i want to do.
-//            // 뷰 모델의 상태를 뷰에다가 쏴주는 부분
-//            val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1, mainList) }
-//            viewPager?.adapter = viewPagerFragmentAdapter
-//            val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
-//            tabLayout?.let {
-//                if (viewPager != null) {
-//                    TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
-//                }
-//            }
-//        }
 
         // adapter 에 notify 해줄때 사용함수
         // adapter.nofityDataSetChanged()
@@ -75,19 +61,16 @@ class AddFragment : Fragment() {
 
         // observe AddFragment 가 아닌 AddListFragment 에서 진행
 
-        val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1) }
+        //val viewPagerFragmentAdapter = this.activity?.let { ViewpagerFragmentAdapter(it, 1) }
+        val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 1)
         viewPager?.adapter = viewPagerFragmentAdapter
         val tabTitles = listOf<String>("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
         tabLayout?.let {
             if (viewPager != null) {
-                TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
+                TabLayoutMediator(it, viewPager) { tab, position ->
+                    tab.text = tabTitles[position]
+                }.attach()
             }
-        }
-
-
-
-        // todo: addToList Button 설정
-        binding?.btnAddToTodo?.setOnClickListener {
         }
 
         // todo: addToDb button 설정
