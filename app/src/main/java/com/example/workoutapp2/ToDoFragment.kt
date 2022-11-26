@@ -56,5 +56,8 @@ class ToDoFragment : Fragment(){
         binding?.btnAdd?.setOnClickListener {
             findNavController().navigate(R.id.action_toDoFragment_to_addFragment, bundle)
         }
+        binding?.btnStart?.setOnClickListener {
+            findNavController().navigate(R.id.action_toDoFragment_to_timerFragment, bundle)
+        }
     }
 }
