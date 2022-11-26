@@ -90,7 +90,7 @@ class AddFragment : Fragment() {
                         "복근" -> "Abs"
                         else -> "Undefined"
                     }
-                    val newExercise = Exercise(name = name, part = partString)
+                    val newExercise = Exercise(name = name, part = partString, isMainExercise = false)
                     Log.d("debugshow addfragment", "wholeList: ${viewModel.wholeList.value ?: "empty"}")
                     if (viewModel.isValid(newExercise)) {
                         viewModel.addToCustom(newExercise)

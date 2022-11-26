@@ -5,8 +5,8 @@ class Exercise(
     var name: String? = "",
     var part: String? = "",
     val lastReps: ArrayList<Int> = arrayListOf(0),
-    val lastWeights: ArrayList<Double> = arrayListOf(0.0)
-
+    val lastWeights: ArrayList<Double> = arrayListOf(0.0),
+    var isMainExercise: Boolean? = null
 
 ){
     override fun toString(): String {
