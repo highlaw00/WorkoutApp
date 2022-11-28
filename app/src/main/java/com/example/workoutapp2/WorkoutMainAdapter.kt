@@ -1,6 +1,7 @@
 package com.example.workoutapp2
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -51,18 +52,27 @@ class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
     class Holder(private val binding: ListWorkoutMainBinding, private val listener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
         var img = binding.ivWorkoutImageMain
         var name = binding.tvWorkoutNameMain
+        var addBtn = binding.btnWorkoutAddMain
+        var removeBtn = binding.btnWorkoutRemoveMain
 
         fun bind(exercise: Exercise) {
             name.text = exercise.name
             img.setImageResource(exercise.img)
 
-            binding.btnWorkoutAddMain.setOnClickListener {
-                listener.onItemClick(adapterPosition, CommandSymbol.ADD)
-            }
-            binding.btnWorkoutRemoveMain.setOnClickListener {
-                listener.onItemClick(adapterPosition, CommandSymbol.REMOVE)
+            // 메인 리스템의 아이템이 만약 custom에 속한다면 x버튼을 보입니다.
+
+            if (exercise.isMainExercise == false) {
+                removeBtn.visibility = View.VISIBLE
+                removeBtn.setOnClickListener {
+                    listener.onItemClick(adapterPosition, CommandSymbol.REMOVE)
+                }
+            } else {
+                removeBtn.visibility = View.GONE
             }
 
+            addBtn.setOnClickListener {
+                listener.onItemClick(adapterPosition, CommandSymbol.ADD)
+            }
         }
     }
 }
