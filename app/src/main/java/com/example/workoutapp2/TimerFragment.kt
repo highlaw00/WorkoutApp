@@ -1,59 +1,95 @@
 package com.example.workoutapp2
 
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import com.example.workoutapp2.databinding.FragmentTimerBinding
+import com.example.workoutapp2.databinding.FragmentToDoBinding
+import com.example.workoutapp2.viewmodel.ExerciseViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TimerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class TimerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class TimerFragment : Fragment(){
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    var binding: FragmentTimerBinding? = null
+    var running:Boolean=false
+    var pauseTime =0L
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_timer, container, false)
+        binding = FragmentTimerBinding.inflate(inflater)
+        return binding?.root
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TimerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TimerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewMode("stop")
+
+        binding?.startBtn?.setOnClickListener {
+            if (!running) {
+                binding?.chronometer!!.base = SystemClock.elapsedRealtime() - pauseTime
+
+                binding?.chronometer!!.start()
+
+                viewMode("start")
+
             }
+        }
+        binding?.stopBtn?.setOnClickListener {
+            if (running) {
+                binding?.chronometer!!.stop()
+
+                pauseTime = SystemClock.elapsedRealtime() - binding?.chronometer!!.base
+
+                viewMode("stop")
+
+            }
+        }
+        binding?.resetBtn?.setOnClickListener {
+            binding?.chronometer?.base = SystemClock.elapsedRealtime()
+
+            pauseTime = 0L
+
+            binding?.chronometer?.stop()
+
+            viewMode("stop")
+        }
+    }
+    private fun viewMode(mode:String)
+    {
+        if(mode=="start")
+        {
+            binding?.startBtn?.isEnabled=false
+            binding?.stopBtn?.isEnabled=true
+            binding?.resetBtn?.isEnabled=true
+            running=true
+        }
+        else
+        {
+            binding?.startBtn?.isEnabled=true
+            binding?.stopBtn?.isEnabled=false
+            binding?.resetBtn?.isEnabled=true
+            running = false
+        }
     }
 }
+
+
+
+
