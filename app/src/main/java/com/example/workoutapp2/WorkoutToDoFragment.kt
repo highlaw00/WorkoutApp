@@ -6,14 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp2.databinding.FragmentWorkoutBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
-import kotlinx.coroutines.*
 
-class WorkoutFragment : Fragment() {
+class WorkoutToDoFragment : Fragment() {
 
     // workoutFragment 에서는 전체적인 toDoList 를 가져옵니다.
     private val viewModel: ExerciseViewModel by activityViewModels()
@@ -44,9 +44,19 @@ class WorkoutFragment : Fragment() {
         binding?.rvWorkoutList?.adapter = newAdapter
         binding?.rvWorkoutList?.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
 
+        newAdapter.setRecyclerViewOnClickListener(object: RecyclerViewOnClickListener {
+            override fun onItemClick(position: Int, command: CommandSymbol) {}
+            override fun onSetClick(position: Int, command: CommandSymbol, reps: Int, weight: Double) {
+                if (command == CommandSymbol.ADD){
+                    viewModel.updateSetByPosition(position, reps, weight)
+                } else {
+                    viewModel.deleteLastSet(position)
+                }
+            }
+        })
+
         viewModel.todoList.observe(viewLifecycleOwner) { todoList ->
             listToDo = viewModel.todoList.value?.toMutableList()
-            Log.d("debugshow todo Fragment", "${listToDo.toString()}")
             newAdapter.updateList(listToDo)
         }
     }

@@ -6,31 +6,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.workoutapp2.databinding.FragmentTimerBinding
-import com.example.workoutapp2.databinding.FragmentToDoBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 
 
 class TimerFragment : Fragment(){
 
+    private val viewModel: ExerciseViewModel by activityViewModels()
+
     var binding: FragmentTimerBinding? = null
-    var running:Boolean=false
+    var running: Boolean=false
     var pauseTime =0L
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentTimerBinding.inflate(inflater)
         return binding?.root
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +31,17 @@ class TimerFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var listToDo: MutableList<Exercise>? = null
+        var currIdx = 0
+
+        listToDo = viewModel.todoList.value?.toMutableList()
+        var currExercise = listToDo?.get(currIdx)
+        currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
+        binding?.tvTimerWorkoutName?.text = currExercise?.name
+        binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
+        binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
+        binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
 
         viewMode("stop")
 
@@ -77,7 +81,6 @@ class TimerFragment : Fragment(){
         {
             binding?.startBtn?.isEnabled=false
             binding?.stopBtn?.isEnabled=true
-            binding?.resetBtn?.isEnabled=true
             running=true
         }
         else

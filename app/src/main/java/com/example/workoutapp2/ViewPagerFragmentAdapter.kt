@@ -1,16 +1,13 @@
 package com.example.workoutapp2
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.workoutapp2.viewmodel.ExerciseViewModel
 
 class ViewpagerFragmentAdapter(parentFragment: Fragment/*fragmentActivity: FragmentActivity*/, id: Int) : /*FragmentStateAdapter(fragmentActivity)*/ FragmentStateAdapter(parentFragment){
     val fragmentList = when (id) {
         0 -> {
             listOf(
-                WorkoutFragment(),
+                WorkoutToDoFragment(),
                 DietFragment()
             )
         }
@@ -32,7 +29,7 @@ class ViewpagerFragmentAdapter(parentFragment: Fragment/*fragmentActivity: Fragm
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList?.get(position) ?: WorkoutFragment()
+        return fragmentList?.get(position) ?: WorkoutToDoFragment()
     }
 
 }

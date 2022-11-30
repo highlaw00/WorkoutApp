@@ -28,12 +28,6 @@ class AddFragment : Fragment() {
     var customColRef: CollectionReference? = null
     private val viewModel: ExerciseViewModel by activityViewModels()
 
-    private fun showResponse(response: ExerciseResponse?) {
-        for (elem in response?.workouts!!) {
-            Log.d("yool", elem.toString())
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -91,7 +85,6 @@ class AddFragment : Fragment() {
                         else -> "Undefined"
                     }
                     val newExercise = Exercise(name = name, part = partString, isMainExercise = false)
-                    Log.d("debugshow addfragment", "wholeList: ${viewModel.wholeList.value ?: "empty"}")
                     if (viewModel.isValid(newExercise)) {
                         viewModel.addToCustom(newExercise)
                         dialog?.dismiss()

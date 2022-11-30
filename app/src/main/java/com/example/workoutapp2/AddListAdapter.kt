@@ -3,22 +3,15 @@ package com.example.workoutapp2
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workoutapp2.databinding.ListWorkoutMainBinding
 
-class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<WorkoutMainAdapter.Holder>() {
+class AddListAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<AddListAdapter.Holder>() {
 
-    private lateinit var myListener: onItemClickListener
+    private lateinit var myListener: RecyclerViewOnClickListener
 
-    interface onItemClickListener {
-        fun onItemClick(position: Int, command: CommandSymbol)
-    }
-
-    fun setOnItemClickListener(listener: onItemClickListener) {
-
+    fun setRecyclerViewOnClickListener(listener: RecyclerViewOnClickListener) {
         myListener = listener
-
     }
 
     fun updateList(newList: MutableList<Exercise>?) {
@@ -49,7 +42,7 @@ class WorkoutMainAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
         return data?.size ?: 0
     }
 
-    class Holder(private val binding: ListWorkoutMainBinding, private val listener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
+    class Holder(private val binding: ListWorkoutMainBinding, private val listener: RecyclerViewOnClickListener): RecyclerView.ViewHolder(binding.root) {
         var img = binding.ivWorkoutImageMain
         var name = binding.tvWorkoutNameMain
         var addBtn = binding.btnWorkoutAddMain
