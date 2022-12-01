@@ -6,6 +6,7 @@ object DataBaseEntry {
     const val CUSTOM_DB_STRING = "customDB"
     const val DAILY_RECORD_INFO_STRING = "DAILY RECORD INFO"
     const val CUSTOM_WORKOUT_DIRECTORY_STRING = "USER_CUSTOM"
+    const val IMAGE_ID: Int = R.drawable.ic_basic
     var UNNI_KEY: String? = null
 
     fun setUnni(key: String?) {

@@ -50,6 +50,7 @@ class ExerciseRepository() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val tempList: ArrayList<Exercise>? = list.value
                 for (child in snapshot.children) {
+                    child.ref.child("img").setValue(DataBaseEntry.IMAGE_ID)
                     val item : Exercise? = child.getValue(Exercise::class.java)
                     if (item != null) {
                         tempList?.add(item)

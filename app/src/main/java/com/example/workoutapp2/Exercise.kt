@@ -1,6 +1,7 @@
 package com.example.workoutapp2
 
 class Exercise(
+
     val img: Int = R.drawable.ic_basic,
     var name: String? = "",
     var part: String? = "",
@@ -12,5 +13,9 @@ class Exercise(
 ){
     override fun toString(): String {
         return "Exercise {name: ${this.name}, part: ${this.part}, img: ${this.img}, lastReps: [${this.lastReps}], lastWeights: [${lastWeights}]}"
+    }
+    inner class Sets {
+        var lastReps: ArrayList<Int>? = null
+        var lastWeights: ArrayList<Int>? = null
     }
 }
