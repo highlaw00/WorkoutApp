@@ -36,7 +36,7 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
 
             if (exercise.lastReps != null) setSetAdapter(binding, exercise)
 
-            binding.btnSetAdd.setOnClickListener {
+            binding?.addSetBtn?.setOnClickListener {
                 // set를 modify 합니다.
                 // 이때 modify 된 set는 운동이 완료된 후 viewModel 에 업데이트합니다.
                 val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))

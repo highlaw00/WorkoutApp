@@ -70,7 +70,7 @@
                 app:srcCompat="@drawable/delete" />
 
             <ImageButton
-                android:id="@+id/btn_set_add"
+                android:id="@+id/add_set_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="20dp"
