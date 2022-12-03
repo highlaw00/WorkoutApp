@@ -127,6 +127,10 @@ class TimerFragment : Fragment(){
             binding?.back?.setOnClickListener {
                 findNavController().navigate(R.id.action_timerFragment_to_toDoFragment)
             }
+            if((i+1)==listToDo?.size && currIdx==setLastIndex){
+                binding?.TheEnd?.text="수고하셨습니다.\n 설정하신 운동을 모두 끝냈습니다."
+                binding?.tothenext?.isEnabled=false
+            }
 
             val dialogBinding =
                 AddSetDialogBinding.inflate(LayoutInflater.from(binding!!.root.context))
