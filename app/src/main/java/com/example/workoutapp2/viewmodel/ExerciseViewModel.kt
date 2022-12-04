@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.workoutapp2.Exercise
 import com.example.workoutapp2.SetDateCommand
 import com.example.workoutapp2.repository.ExerciseRepository
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ExerciseViewModel: ViewModel() {
 
@@ -36,6 +38,7 @@ class ExerciseViewModel: ViewModel() {
         observeToDoByDate(currentSelectedDate!!, command)
 
     }
+    fun getDate(): String? = currentSelectedDate
 
     fun addToCustom(exercise: Exercise) = repository.postToCustom(exercise)
 
@@ -51,7 +54,7 @@ class ExerciseViewModel: ViewModel() {
 
     fun isValid(newExercise: Exercise): Boolean {
         for (exercise in _wholeList.value!!) {
-            if (newExercise.name == exercise?.name) return false
+            if (newExercise.name == exercise.name) return false
         }
         return true
     }
@@ -90,10 +93,25 @@ class ExerciseViewModel: ViewModel() {
         }
     }
 
+    fun removeFromDaily(position: Int) {
+        val exercise = _todoList.value?.get(position)
+        if (exercise != null) {
+            repository.removeFromDailyDB(exercise, currentSelectedDate.toString())
+        }
+    }
+
     fun checkStartValidation(): Boolean {
         for (exercise in todoList.value?.toList()!!) {
             if (exercise.lastReps == null && exercise.lastWeights == null) return false
         }
         return true
+    }
+
+    fun swapExercise(fromPos: Int, toPos: Int) {
+        val tempList: ArrayList<Exercise>? = _todoList.value
+        if (tempList != null) {
+            Collections.swap(tempList, fromPos, toPos)
+        }
+        _todoList.value = tempList!!
     }
 }

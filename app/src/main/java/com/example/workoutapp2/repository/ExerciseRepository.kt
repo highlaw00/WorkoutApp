@@ -8,6 +8,8 @@ import com.example.workoutapp2.SetDateCommand
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ExerciseRepository() {
     private val database = Firebase.database
@@ -22,12 +24,10 @@ class ExerciseRepository() {
 
     fun postToDailyDB(exercise: Exercise?, date: String) {
         val key = DataBaseEntry.UNNI_KEY
+
         // custom exercise 라면 따로 set 정보를 저장할 필요가 없습니다.
         // 단, main exercise 의 경우 set 정보를 custom/uuid/workout_info/exercise.name 에서 가져와 저장합니다.
-        if (exercise?.isMainExercise == false) {
-            dailyRef.child(key.toString()).child(date).child(exercise.name.toString())
-                .setValue(exercise)
-        } else if (exercise?.isMainExercise == true) {
+        if (exercise?.isMainExercise == true) {
             customRef.child(key.toString()).child("main workout info").child(exercise.name.toString())
                 .get()
                 .addOnSuccessListener { snapshot ->
@@ -38,9 +38,10 @@ class ExerciseRepository() {
                         exercise.lastReps = snapshot.getValue(Exercise::class.java)!!.lastReps
                         exercise.lastWeights = snapshot.getValue(Exercise::class.java)!!.lastWeights
                     }else snapshot.ref.setValue(exercise)
-                    dailyRef.child(key.toString()).child(date).child(exercise.name.toString())
-                        .setValue(exercise)
                 }
+        }
+        dailyRef.child(key.toString()).child(date).get().addOnSuccessListener {
+            dailyRef.child(key.toString()).child(date).child(exercise?.name!!).setValue(exercise)
         }
     }
 
@@ -102,29 +103,7 @@ class ExerciseRepository() {
     fun observeToDoList(list: MutableLiveData<ArrayList<Exercise>>, date: String, command: SetDateCommand) {
         val key = DataBaseEntry.UNNI_KEY
 
-        if (command == SetDateCommand.DIFFERENT) {
-            list.value?.clear()
-            list.value = arrayListOf()
-            dailyRef.removeEventListener(object: ChildEventListener {
-                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                }
-
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                }
-
-                override fun onChildRemoved(snapshot: DataSnapshot) {
-                }
-
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-            })
-        }
-
-        dailyRef.child(key.toString()).child(date).addChildEventListener(object: ChildEventListener {
+        val childEventListener = object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val tempList: ArrayList<Exercise>? = list.value
                 snapshot.getValue(Exercise::class.java)?.let { tempList?.add(it) }
@@ -132,9 +111,22 @@ class ExerciseRepository() {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                val removedExerciseName = snapshot.getValue(Exercise::class.java)?.name
+                val tempList: ArrayList<Exercise>? = list.value
+
+                if (tempList != null) {
+                    for (exercise in tempList) {
+                        if (removedExerciseName == exercise.name) {
+                            tempList.remove(exercise)
+                            break
+                        }
+                    }
+                }
+                list.value = tempList
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -143,11 +135,24 @@ class ExerciseRepository() {
             override fun onCancelled(error: DatabaseError) {
             }
 
-        })
+        }
+
+        if (command == SetDateCommand.DIFFERENT) {
+            list.value?.clear()
+            list.value = arrayListOf()
+            dailyRef.child(key.toString()).child(date).removeEventListener(childEventListener)
+        }
+
+        dailyRef.child(key.toString()).child(date).addChildEventListener(childEventListener)
     }
 
     fun removeFromCustomDB(exercise: Exercise) {
         val key = DataBaseEntry.UNNI_KEY
-        customRef.child(key.toString()).child("custom workout info").child(exercise.name!!).removeValue()
+        customRef.child(key.toString()).child("custom workout info").child(exercise.name.toString()).removeValue()
+    }
+
+    fun removeFromDailyDB(exercise: Exercise, date: String) {
+        val key = DataBaseEntry.UNNI_KEY
+        dailyRef.child(key.toString()).child(date).child(exercise.name.toString()).removeValue()
     }
 }

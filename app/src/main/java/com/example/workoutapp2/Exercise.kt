@@ -8,8 +8,8 @@ class Exercise(
     var lastReps: ArrayList<Int>? = null,
     var lastWeights: ArrayList<Double>? = null,
     @JvmField
-    var isMainExercise: Boolean? = null
-
+    var isMainExercise: Boolean? = null,
+    var dailyIndex: Int? = null
 ){
     override fun toString(): String {
         return "Exercise {name: ${this.name}, part: ${this.part}, img: ${this.img}, lastReps: [${this.lastReps}], lastWeights: [${lastWeights}]}"

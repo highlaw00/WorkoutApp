@@ -32,7 +32,7 @@ class SetAdapter(private val exercise: Exercise): RecyclerView.Adapter<SetAdapte
     }
 
     override fun getItemCount(): Int {
-        return exercise.lastReps!!.size
+        return exercise.lastReps?.size ?: 0
     }
 
 }

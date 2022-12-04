@@ -31,11 +31,6 @@ class TimerFragment : Fragment(){
         return binding?.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,9 +52,7 @@ class TimerFragment : Fragment(){
         binding?.startBtn?.setOnClickListener {
             if (!running) {
                 binding?.chronometer!!.base = SystemClock.elapsedRealtime() - pauseTime
-
                 binding?.chronometer!!.start()
-
                 viewMode("start")
 
             }
@@ -95,7 +88,7 @@ class TimerFragment : Fragment(){
                 binding?.startBtn?.isEnabled = false
                 binding?.stopBtn?.isEnabled = false
                 binding?.addSetBtn?.isEnabled=false
-                binding?.TheEnd?.text="${currExercise?.name}의 \n 세트를 모두 마쳤습니다"
+                binding?.TheEnd?.text="${currExercise?.name}의\n세트를 모두 마쳤습니다"
 
                 binding?.tothenext?.visibility=View.VISIBLE
                 binding?.tothenext?.setOnClickListener {
@@ -133,28 +126,24 @@ class TimerFragment : Fragment(){
             }
 
             val dialogBinding =
-                AddSetDialogBinding.inflate(LayoutInflater.from(binding!!.root.context))
-            val dialog = AlertDialog.Builder(binding!!.root.context).run {
-                if (currExercise?.lastReps == null) {
+                AddSetDialogBinding.inflate(LayoutInflater.from(binding?.root?.context))
+            val dialog = AlertDialog.Builder(binding?.root?.context).run {
+                val setLastIndex = currExercise?.lastWeights?.lastIndex!!
 
-                    dialogBinding.etReps.hint = ""
-                    dialogBinding.etWeight.hint = ""
-                } else {
-                    val setLastIndex = currExercise?.lastWeights?.lastIndex!!
+                val lastRepsVal = currExercise?.lastReps?.get(currIdx).toString()
+                val lastWeightVal = currExercise?.lastWeights?.get(currIdx).toString()
 
-                    val lastRepsVal = currExercise?.lastReps?.get(setLastIndex).toString()
-                    val lastWeightVal = currExercise?.lastWeights?.get(setLastIndex).toString()
+                dialogBinding.etReps.hint = lastRepsVal
+                dialogBinding.etWeight.hint = lastWeightVal
 
-                    dialogBinding.etReps.hint = lastRepsVal
-                    dialogBinding.etWeight.hint = lastWeightVal
+                dialogBinding.etReps.setText(lastRepsVal)
+                dialogBinding.etWeight.setText(lastWeightVal)
 
-                }
+                setTitle("세트 ${currIdx + 1} 결과")
                 setView(dialogBinding.root)
                 setPositiveButton("설정하기", null)
 
                 show()
-
-
             }
         }
 

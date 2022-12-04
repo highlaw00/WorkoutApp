@@ -7,8 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.DragStartHelper
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.workoutapp2.databinding.FragmentToDoBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
@@ -16,17 +22,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ToDoFragment : Fragment(){
+class ToDoFragment() : Fragment(){
     private val viewModel: ExerciseViewModel by activityViewModels()
-    var keyData: String? = null
-    var currentDate: String? = null
     var binding: FragmentToDoBinding? = null
+    private var date: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            keyData = it.getString("KEY")
-            currentDate = it.getString("DATE")
+            date = it.getString("date").toString()
         }
     }
 
@@ -37,33 +41,70 @@ class ToDoFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var listToDo: MutableList<Exercise>? = null
 
-        val viewPager: ViewPager2? = binding?.vpTodoList
-        val tabLayout: TabLayout? = binding?.tabLayout
-        val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 0)
-        viewPager?.adapter = viewPagerFragmentAdapter
+        viewModel.setDate(this.date)
 
-        val tabTitles = listOf("운동", "식단")
-        tabLayout?.let {
-            if (viewPager != null) {
-                TabLayoutMediator(it, viewPager, { tab, position -> tab.text = tabTitles[position]}).attach()
+        binding?.tvDate?.text = "${viewModel.getDate()}"
+        binding?.rvTodoWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
+        binding?.rvTodoWorkoutList?.setHasFixedSize(true)
+
+        listToDo = viewModel.todoList.value?.toMutableList()
+        val newAdapter = WorkoutToDoAdapter(listToDo)
+
+        binding?.rvTodoWorkoutList?.adapter = newAdapter
+        binding?.rvTodoWorkoutList?.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+
+        newAdapter.setRecyclerViewOnClickListener(object: RecyclerViewOnClickListener {
+            override fun onItemClick(position: Int, command: CommandSymbol) {}
+            override fun onSetClick(position: Int, command: CommandSymbol, reps: Int, weight: Double) {
+                if (command == CommandSymbol.ADD){
+                    viewModel.updateSetByPosition(position, reps, weight)
+                } else {
+                    viewModel.deleteLastSet(position)
+                }
+            }
+        })
+
+        val itemTouchCallBack = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                val fromPos: Int = viewHolder.adapterPosition
+                val toPos: Int = target.adapterPosition
+                viewModel.swapExercise(fromPos, toPos)
+                newAdapter.notifyItemMoved(fromPos, toPos)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position: Int = viewHolder.adapterPosition
+                viewModel.removeFromDaily(position)
+                newAdapter.removeData(viewHolder.layoutPosition)
             }
         }
 
-        // 아래 코드는 add fragment로 가는 listener 설정 코드입니다.
-        val bundle = Bundle().apply {
-            putString("KEY", keyData)
+        ItemTouchHelper(itemTouchCallBack).attachToRecyclerView(binding?.rvTodoWorkoutList)
+        viewModel.todoList.observe(viewLifecycleOwner) {
+            listToDo = viewModel.todoList.value?.toMutableList()
+            newAdapter.updateList(listToDo)
         }
+
+
+
+
         binding?.btnAdd?.setOnClickListener {
-            findNavController().navigate(R.id.action_toDoFragment_to_addFragment, bundle)
+            findNavController().navigate(R.id.action_toDoFragment_to_addFragment)
         }
         binding?.btnStart?.setOnClickListener {
             if (viewModel.checkStartValidation()) {
-                findNavController().navigate(R.id.action_toDoFragment_to_timerFragment, bundle)
+                findNavController().navigate(R.id.action_toDoFragment_to_timerFragment)
             } else {
                 Toast.makeText(this.context, "세트를 추가하지 않은 운동이 존재합니다.", Toast.LENGTH_SHORT).show()
             }
-
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("debugshow on destroy", "ondestroy view")
     }
 }

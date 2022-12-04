@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workoutapp2.databinding.AddSetDialogBinding
 import com.example.workoutapp2.databinding.ListWorkoutTodoBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
+import java.util.*
 
 class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<WorkoutToDoAdapter.Holder>() {
 
@@ -18,6 +20,11 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
 
     fun setRecyclerViewOnClickListener(listener: RecyclerViewOnClickListener) {
         myListener = listener
+    }
+
+    fun removeData(layoutPosition: Int) {
+        data?.removeAt(layoutPosition)
+        notifyItemRemoved(layoutPosition)
     }
 
     class Holder(private val binding: ListWorkoutTodoBinding, private val listener: RecyclerViewOnClickListener) : RecyclerView.ViewHolder(binding.root) {
@@ -32,11 +39,9 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
         }
 
         private fun setButtons(binding: ListWorkoutTodoBinding, exercise: Exercise) {
-            Log.d("debugshow setBtn", "$exercise")
-
             if (exercise.lastReps != null) setSetAdapter(binding, exercise)
 
-            binding?.addSetBtn?.setOnClickListener {
+            binding.addSetBtn.setOnClickListener {
                 // set를 modify 합니다.
                 // 이때 modify 된 set는 운동이 완료된 후 viewModel 에 업데이트합니다.
                 val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))
@@ -63,8 +68,8 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
 
-                    var inputReps: Int? = dialogBinding.etReps.text.toString().toIntOrNull()
-                    var inputWeight: Double? = dialogBinding.etWeight.text.toString().toDoubleOrNull()
+                    val inputReps: Int? = dialogBinding.etReps.text.toString().toIntOrNull()
+                    val inputWeight: Double? = dialogBinding.etWeight.text.toString().toDoubleOrNull()
 
                     if (inputReps == null || inputWeight == null) {
                         Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
@@ -126,4 +131,6 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
         }
         this.notifyDataSetChanged()
     }
+
+
 }

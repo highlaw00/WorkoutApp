@@ -3,16 +3,8 @@ package com.example.workoutapp2
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class ViewpagerFragmentAdapter(parentFragment: Fragment/*fragmentActivity: FragmentActivity*/, id: Int) : /*FragmentStateAdapter(fragmentActivity)*/ FragmentStateAdapter(parentFragment){
-    val fragmentList = when (id) {
-        0 -> {
-            listOf(
-                WorkoutToDoFragment(),
-                DietFragment()
-            )
-        }
-        1 -> {
-            listOf<Fragment>(
+class ViewpagerFragmentAdapter(parentFragment: Fragment) : FragmentStateAdapter(parentFragment){
+    private val fragmentList = listOf<Fragment>(
                 AddListFragment("All"),
                 AddListFragment("Chest"),
                 AddListFragment("Back"),
@@ -20,16 +12,14 @@ class ViewpagerFragmentAdapter(parentFragment: Fragment/*fragmentActivity: Fragm
                 AddListFragment("Delts"),
                 AddListFragment("Legs"),
                 AddListFragment("Abs"))
-        }
-        else -> null
 
-}
+
     override fun getItemCount(): Int {
-        return fragmentList?.size ?: 0
+        return fragmentList.size
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList?.get(position) ?: WorkoutToDoFragment()
+        return fragmentList[position]
     }
 
 }

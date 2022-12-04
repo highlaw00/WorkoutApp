@@ -70,6 +70,7 @@ class AddListFragment(val part: String) : Fragment() {
             }
 
             override fun onSetClick(position: Int, command: CommandSymbol, reps: Int, weight: Double) {}
+
         })
         addListBinding.rvMainWorkoutList.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
 

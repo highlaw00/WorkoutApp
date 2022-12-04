@@ -54,14 +54,13 @@
 
             <TextView
                 android:id="@+id/tv_timer_workout_name"
-                android:layout_width="132dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="right"
                 android:text="Bench Press"
-                android:textAlignment="viewStart"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:textStyle="bold"

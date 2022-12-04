@@ -22,23 +22,11 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddFragment : Fragment() {
-    var keyData: String? = null
     var binding: FragmentAddBinding? = null
-    var mainColRef: CollectionReference? = null
-    var customColRef: CollectionReference? = null
     private val viewModel: ExerciseViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            keyData = it.getString("KEY")
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAddBinding.inflate(inflater)
-        mainColRef = FirebaseFirestore.getInstance().collection(DataBaseEntry.MAIN_DB_STRING)
-        customColRef = FirebaseFirestore.getInstance().collection(DataBaseEntry.CUSTOM_DB_STRING)
         return binding?.root
     }
 
@@ -48,7 +36,7 @@ class AddFragment : Fragment() {
         val viewPager: ViewPager2? = binding?.vpList
         val tabLayout: TabLayout? = binding?.tabAddLayout
 
-        val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this, 1)
+        val viewPagerFragmentAdapter = ViewpagerFragmentAdapter(this)
         viewPager?.adapter = viewPagerFragmentAdapter
         val tabTitles = listOf("전체", "가슴", "등", "팔", "어깨", "하체", "복근")
         tabLayout?.let {
@@ -59,8 +47,6 @@ class AddFragment : Fragment() {
             }
         }
 
-        // todo: addToDb button 설정
-        // todo: 새로운 운동을 추가할 때, wholeList에 존재한다면 추가할 수 없도록함.
         binding?.btnAddToDb?.setOnClickListener {
             val dialogBinding = AddDialogBinding.inflate(layoutInflater)
             val dialog = this.context?.let { it1 ->

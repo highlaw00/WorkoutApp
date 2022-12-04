@@ -13,7 +13,6 @@ import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import java.time.format.DateTimeFormatter
 
 class EntryFragment : Fragment() {
-    val viewModel: ExerciseViewModel by activityViewModels()
     var binding: FragmentEntryBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -29,8 +28,10 @@ class EntryFragment : Fragment() {
         binding?.btnEntryOk?.setOnClickListener {
             val datePicker = binding?.dpEntryDp
             val currentSelectedDate = "${datePicker?.year.toString()}-${(datePicker?.month?.plus(1)).toString()}-${datePicker?.dayOfMonth.toString()}"
-            viewModel.setDate(currentSelectedDate)
-            findNavController().navigate(R.id.action_entryFragment_to_toDoFragment2)
+            val date =Bundle().apply {
+                putString("date", currentSelectedDate)
+            }
+            findNavController().navigate(R.id.action_entryFragment_to_toDoFragment2, date)
         }
     }
 
