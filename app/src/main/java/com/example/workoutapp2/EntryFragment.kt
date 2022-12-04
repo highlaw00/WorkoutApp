@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter
 
 class EntryFragment : Fragment() {
     var binding: FragmentEntryBinding? = null
-
+    val viewModel: ExerciseViewModel by activityViewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEntryBinding.inflate(inflater)
         return binding?.root
@@ -28,10 +28,8 @@ class EntryFragment : Fragment() {
         binding?.btnEntryOk?.setOnClickListener {
             val datePicker = binding?.dpEntryDp
             val currentSelectedDate = "${datePicker?.year.toString()}-${(datePicker?.month?.plus(1)).toString()}-${datePicker?.dayOfMonth.toString()}"
-            val date =Bundle().apply {
-                putString("date", currentSelectedDate)
-            }
-            findNavController().navigate(R.id.action_entryFragment_to_toDoFragment2, date)
+            viewModel.setDate(currentSelectedDate)
+            findNavController().navigate(R.id.action_entryFragment_to_toDoFragment2)
         }
     }
 

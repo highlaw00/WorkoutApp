@@ -25,14 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ToDoFragment() : Fragment(){
     private val viewModel: ExerciseViewModel by activityViewModels()
     var binding: FragmentToDoBinding? = null
-    private var date: String = ""
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            date = it.getString("date").toString()
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentToDoBinding.inflate(inflater)
@@ -42,8 +34,6 @@ class ToDoFragment() : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var listToDo: MutableList<Exercise>? = null
-
-        viewModel.setDate(this.date)
 
         binding?.tvDate?.text = "${viewModel.getDate()}"
         binding?.rvTodoWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
