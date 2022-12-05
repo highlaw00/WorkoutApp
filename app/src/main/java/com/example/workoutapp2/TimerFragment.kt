@@ -25,7 +25,7 @@ class TimerFragment : Fragment(){
     var running: Boolean=false
     var pauseTime =0L
     var i=0
-
+    var count=0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentTimerBinding.inflate(inflater)
         return binding?.root
@@ -39,11 +39,16 @@ class TimerFragment : Fragment(){
 
         listToDo = viewModel.todoList.value?.toMutableList()
         var currExercise = listToDo?.get(currIdx)
+
+        fun getInformation(currExercise: Exercise?, currIdx:Int){
+            binding?.tvTimerWorkoutName?.text = currExercise?.name
+            binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
+            binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
+            binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
+        }
+
         currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
-        binding?.tvTimerWorkoutName?.text = currExercise?.name
-        binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
-        binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
-        binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
+        getInformation(currExercise,currIdx)
 
 
 
@@ -85,12 +90,13 @@ class TimerFragment : Fragment(){
 
                 binding?.back?.visibility = View.VISIBLE
                 binding?.TheEnd?.visibility = View.VISIBLE
+                binding?.tothenext?.visibility=View.VISIBLE
                 binding?.startBtn?.isEnabled = false
                 binding?.stopBtn?.isEnabled = false
                 binding?.addSetBtn?.isEnabled=false
                 binding?.TheEnd?.text="${currExercise?.name}의\n세트를 모두 마쳤습니다"
 
-                binding?.tothenext?.visibility=View.VISIBLE
+
                 binding?.tothenext?.setOnClickListener {
                     i++
 
@@ -100,23 +106,18 @@ class TimerFragment : Fragment(){
                     binding?.back?.visibility = View.INVISIBLE
                     binding?.TheEnd?.visibility = View.INVISIBLE
                     binding?.tothenext?.visibility=View.INVISIBLE
-                    binding?.tvTimerWorkoutName?.text = currExercise?.name
-                    binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
-                    binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
-                    binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
+                    getInformation(currExercise,currIdx)
                     binding?.startBtn?.isEnabled = true
                     binding?.stopBtn?.isEnabled = true
                     binding?.addSetBtn?.isEnabled=true
+                    count=0
                 }
             }
             currExercise = listToDo?.get(i)
             setLastIndex = currExercise?.lastWeights?.lastIndex!!
             currIdx++
 
-            binding?.tvTimerWorkoutName?.text = currExercise?.name
-            binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
-            binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
-            binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
+            getInformation(currExercise,currIdx)
             binding?.back?.setOnClickListener {
                 findNavController().navigate(R.id.action_timerFragment_to_toDoFragment)
             }
@@ -129,9 +130,28 @@ class TimerFragment : Fragment(){
                 AddSetDialogBinding.inflate(LayoutInflater.from(binding?.root?.context))
             val dialog = AlertDialog.Builder(binding?.root?.context).run {
                 val setLastIndex = currExercise?.lastWeights?.lastIndex!!
+                var lastRepsVal:String
+                var lastWeightVal:String
+                    lastRepsVal = currExercise?.lastReps?.get(currIdx-1).toString()
+                    lastWeightVal = currExercise?.lastWeights?.get(currIdx-1).toString()
+                    setTitle("세트 ${currIdx} 결과")
+                    if(currIdx==setLastIndex)
+                    {
+                        lastRepsVal = currExercise?.lastReps?.get(currIdx).toString()
+                        lastWeightVal = currExercise?.lastWeights?.get(currIdx).toString()
+                        setTitle("세트 ${currIdx + 1} 결과")
+                        count++
+                        if(currIdx==setLastIndex&&count==1)
+                        {
+                            lastRepsVal = currExercise?.lastReps?.get(currIdx-1).toString()
+                            lastWeightVal = currExercise?.lastWeights?.get(currIdx-1).toString()
+                            setTitle("세트 ${currIdx} 결과")
+                        }
 
-                val lastRepsVal = currExercise?.lastReps?.get(currIdx).toString()
-                val lastWeightVal = currExercise?.lastWeights?.get(currIdx).toString()
+
+
+
+                }
 
                 dialogBinding.etReps.hint = lastRepsVal
                 dialogBinding.etWeight.hint = lastWeightVal
@@ -139,7 +159,7 @@ class TimerFragment : Fragment(){
                 dialogBinding.etReps.setText(lastRepsVal)
                 dialogBinding.etWeight.setText(lastWeightVal)
 
-                setTitle("세트 ${currIdx + 1} 결과")
+
                 setView(dialogBinding.root)
                 setPositiveButton("설정하기", null)
 
