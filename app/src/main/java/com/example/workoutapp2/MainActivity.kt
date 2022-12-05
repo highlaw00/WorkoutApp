@@ -8,6 +8,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.workoutapp2.databinding.ActivityMainBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,16 +46,20 @@ class MainActivity : AppCompatActivity() {
         val navController = binding.frgNav.getFragment<NavHostFragment>().navController
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.entryFragment)
+            setOf(R.id.entryFragment,R.id.startFragment)
         )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         if (!checkKey()) DataBaseEntry.setUnni(makeKey())
         else DataBaseEntry.setUnni(getKey())
 
-        Log.d("ic_test", "basic: ${R.drawable.ic_basic}")
-        Log.d("ic_test", "basic: ${R.drawable.ic_add}")
-
 
         setContentView(binding.root)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = binding.frgNav.getFragment<NavHostFragment>().navController
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

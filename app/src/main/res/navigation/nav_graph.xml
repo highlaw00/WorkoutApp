@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/entryFragment"
         android:name="com.example.workoutapp2.EntryFragment"
-        android:label="fragment_entry"
-        tools:layout="@layout/fragment_entry" >
+        android:label="날짜 선택"
+        tools:layout="@layout/fragment_entry">
         <action
             android:id="@+id/action_entryFragment_to_toDoFragment2"
             app:destination="@id/toDoFragment" />
@@ -17,8 +17,8 @@
     <fragment
         android:id="@+id/toDoFragment"
         android:name="com.example.workoutapp2.ToDoFragment"
-        android:label="fragment_to_do"
-        tools:layout="@layout/fragment_to_do" >
+        android:label="운동 목표 설정"
+        tools:layout="@layout/fragment_to_do">
         <action
             android:id="@+id/action_toDoFragment_to_addFragment"
             app:destination="@id/addFragment"
@@ -30,8 +30,8 @@
     <fragment
         android:id="@+id/addFragment"
         android:name="com.example.workoutapp2.AddFragment"
-        android:label="fragment_add"
-        tools:layout="@layout/fragment_add" >
+        android:label="운동 추가"
+        tools:layout="@layout/fragment_add">
         <action
             android:id="@+id/action_addFragment_to_toDoFragment"
             app:destination="@id/toDoFragment" />
@@ -39,8 +39,8 @@
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.workoutapp2.TimerFragment"
-        android:label="fragment_timer"
-        tools:layout="@layout/fragment_timer" >
+        android:label="타이머"
+        tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_timerFragment_to_toDoFragment"
             app:destination="@id/toDoFragment" />
@@ -48,8 +48,8 @@
     <fragment
         android:id="@+id/startFragment"
         android:name="com.example.workoutapp2.StartFragment"
-        android:label="fragment_start"
-        tools:layout="@layout/fragment_start" >
+        android:label="트레이닝 플래너"
+        tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/action_startFragment_to_entryFragment"
             app:destination="@id/entryFragment" />

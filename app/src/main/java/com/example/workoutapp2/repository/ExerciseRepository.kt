@@ -51,7 +51,19 @@ class ExerciseRepository() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val tempList: ArrayList<Exercise>? = list.value
                 for (child in snapshot.children) {
-                    child.ref.child("img").setValue(DataBaseEntry.IMAGE_ID)
+//                    when (child.child("name").value) {
+//                        "벤치 프레스" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_BENCH)
+//                        "디클라인 벤치 프레스" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_BENCH)
+//                        "인클라인 벤치 프레스" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_BENCH)
+//                        "밀리터리 프레스" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_PRESS)
+//                        "크런치" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_CRUNCH)
+//                        "바벨 컬" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_ARMS)
+//                        "덤벨 컬" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_ARMS)
+//                        "스쿼트" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_SQUAT)
+//                        "풀업" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_PULL)
+//                        "푸쉬업" -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_PUSH)
+//                        else -> child.ref.child("img").setValue(DataBaseEntry.IMAGE_ID)
+//                    }
                     val item : Exercise? = child.getValue(Exercise::class.java)
                     if (item != null) {
                         tempList?.add(item)

@@ -35,7 +35,9 @@ class ToDoFragment() : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         var listToDo: MutableList<Exercise>? = null
 
+
         binding?.tvDate?.text = "${viewModel.getDate()}"
+
         binding?.rvTodoWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
         binding?.rvTodoWorkoutList?.setHasFixedSize(true)
 
@@ -95,6 +97,6 @@ class ToDoFragment() : Fragment(){
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("debugshow on destroy", "ondestroy view")
+        binding = null
     }
 }

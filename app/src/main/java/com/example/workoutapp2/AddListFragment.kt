@@ -11,30 +11,31 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.workoutapp2.databinding.FragmentAddBinding
 import com.example.workoutapp2.databinding.FragmentAddListBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
 
 class AddListFragment(val part: String) : Fragment() {
     // 문자열을 하나 받아 추후 ViewModel에서 값을 가져옵니다.
-
+    var binding: FragmentAddListBinding? = null
     private val viewModel: ExerciseViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_add_list, container, false)
+        binding = FragmentAddListBinding.inflate(inflater)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val addListBinding = FragmentAddListBinding.bind(view)
         var listByPart:MutableList<Exercise>? = null
 
-        addListBinding.rvMainWorkoutList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        addListBinding.rvMainWorkoutList.setHasFixedSize(true)
+        binding?.rvMainWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding?.rvMainWorkoutList?.setHasFixedSize(true)
 
         // adapter 연결
         listByPart = viewModel.getListByPart(part)
         var newAdapter = AddListAdapter(listByPart)
-        addListBinding.rvMainWorkoutList.adapter = newAdapter
+        binding?.rvMainWorkoutList?.adapter = newAdapter
 
         newAdapter.setRecyclerViewOnClickListener(object:  RecyclerViewOnClickListener{
             override fun onItemClick(position: Int, command: CommandSymbol) {
@@ -72,12 +73,15 @@ class AddListFragment(val part: String) : Fragment() {
             override fun onSetClick(position: Int, command: CommandSymbol, reps: Int, weight: Double) {}
 
         })
-        addListBinding.rvMainWorkoutList.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+        binding?.rvMainWorkoutList?.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
 
         viewModel.wholeList.observe(viewLifecycleOwner) { wholeList ->
             listByPart = viewModel.getListByPart(part)
             newAdapter.updateList(listByPart)
         }
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }
