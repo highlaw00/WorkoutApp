@@ -24,8 +24,8 @@ class TimerFragment : Fragment(){
     var binding: FragmentTimerBinding? = null
     var running: Boolean=false
     var pauseTime =0L
-    var i=0
-    var count=0
+    var exercise_count=0 //현재 운동의 인덱스
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentTimerBinding.inflate(inflater)
         return binding?.root
@@ -35,26 +35,36 @@ class TimerFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         var listToDo: MutableList<Exercise>? = null
-        var currIdx = 0
+        var currIdx = 0 //현재 세트의 인덱스
 
         listToDo = viewModel.todoList.value?.toMutableList()
-        var currExercise = listToDo?.get(currIdx)
+        var currExercise = listToDo?.get(currIdx) //처음 운동에 대한 정보를 가져옴
+        var setLastIndex = currExercise?.lastWeights?.lastIndex!! //처음 운동의 마지막세트
 
-        fun getInformation(currExercise: Exercise?, currIdx:Int){
+
+        fun getInformation(currExercise: Exercise?, currIdx:Int){ //운동 정보 저장 함수
             binding?.tvTimerWorkoutName?.text = currExercise?.name
             binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
             binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
             binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
         }
 
+        fun ViewAndEnabled(visible1:Int,visible2:Int,visible3:Int,Enabled1:Boolean,Enabled2:Boolean,Enabled3:Boolean)
+        { //  버튼 활성화 및 visible 함수
+            binding?.back?.visibility = visible1
+            binding?.TheEnd?.visibility = visible2
+            binding?.tothenext?.visibility= visible3
+            binding?.startBtn?.isEnabled = Enabled1
+            binding?.stopBtn?.isEnabled = Enabled2
+            binding?.addSetBtn?.isEnabled=Enabled3
+        }
+
         currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
-        getInformation(currExercise,currIdx)
-
-
+        getInformation(currExercise,currIdx) //처음 운동의 0번째 세트 정보로 저장
 
         viewMode("stop")
 
-        binding?.startBtn?.setOnClickListener {
+        binding?.startBtn?.setOnClickListener { // 휴식 시작 버튼
             if (!running) {
                 binding?.chronometer!!.base = SystemClock.elapsedRealtime() - pauseTime
                 binding?.chronometer!!.start()
@@ -62,7 +72,7 @@ class TimerFragment : Fragment(){
 
             }
         }
-        binding?.stopBtn?.setOnClickListener {
+        binding?.stopBtn?.setOnClickListener { // 휴식 중지 버튼
             if (running) {
                 binding?.chronometer!!.stop()
 
@@ -72,7 +82,7 @@ class TimerFragment : Fragment(){
 
             }
         }
-        binding?.addSetBtn?.setOnClickListener {
+        binding?.addSetBtn?.setOnClickListener { // 다음운동 버튼
             binding?.chronometer?.base = SystemClock.elapsedRealtime()
 
             pauseTime = 0L
@@ -82,112 +92,60 @@ class TimerFragment : Fragment(){
             viewMode("stop")
 
 
-            var setLastIndex = currExercise?.lastWeights?.lastIndex!!
             currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
 
-            if (currIdx== setLastIndex) {
+            if (currIdx== setLastIndex) { //현재 세트가 마지막 세트일 경우에
                 currIdx--
 
-                binding?.back?.visibility = View.VISIBLE
-                binding?.TheEnd?.visibility = View.VISIBLE
-                binding?.tothenext?.visibility=View.VISIBLE
-                binding?.startBtn?.isEnabled = false
-                binding?.stopBtn?.isEnabled = false
-                binding?.addSetBtn?.isEnabled=false
+                ViewAndEnabled(View.VISIBLE,View.VISIBLE,View.VISIBLE,false,false,false)
                 binding?.TheEnd?.text="${currExercise?.name}의\n세트를 모두 마쳤습니다"
 
-
                 binding?.tothenext?.setOnClickListener {
-                    i++
+                    exercise_count++ //운동의 인덱스를 한칸 올림
 
-                    currExercise = listToDo?.get(i)
-                    setLastIndex = currExercise?.lastWeights?.lastIndex!!
-                    currIdx=0
-                    binding?.back?.visibility = View.INVISIBLE
-                    binding?.TheEnd?.visibility = View.INVISIBLE
-                    binding?.tothenext?.visibility=View.INVISIBLE
-                    getInformation(currExercise,currIdx)
-                    binding?.startBtn?.isEnabled = true
-                    binding?.stopBtn?.isEnabled = true
-                    binding?.addSetBtn?.isEnabled=true
-                    count=0
+                    currExercise = listToDo?.get(exercise_count) //다음 운동의 정보를 받아옴
+                    setLastIndex = currExercise?.lastWeights?.lastIndex!! // 그 운동에 대한 마지막세트수를 저장
+                    currIdx=0 //다음 운동으로 넘어갔을때 현재 세트값 초기화
+
+
+                    ViewAndEnabled(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,true,true,true)
+                    getInformation(currExercise,currIdx) // 다음세트 0번쩨 정보 가져오기
+                }
+                binding?.back?.setOnClickListener { //처음으로 버튼
+                    findNavController().navigate(R.id.action_timerFragment_to_toDoFragment)
                 }
             }
-            currExercise = listToDo?.get(i)
-            setLastIndex = currExercise?.lastWeights?.lastIndex!!
-            currIdx++
 
-            getInformation(currExercise,currIdx)
-            binding?.back?.setOnClickListener {
-                findNavController().navigate(R.id.action_timerFragment_to_toDoFragment)
-            }
-            if((i+1)==listToDo?.size && currIdx==setLastIndex){
+            currIdx++ //현재 세트 올리기
+
+            getInformation(currExercise,currIdx) //운동정보 저장
+
+
+            if((exercise_count+1)==listToDo?.size && currIdx==setLastIndex){ //마지막 운동을 끝내고 마지막 세트도 끝냈을때
                 binding?.TheEnd?.text="수고하셨습니다.\n 설정하신 운동을 모두 끝냈습니다."
                 binding?.tothenext?.isEnabled=false
             }
 
-            val dialogBinding =
-                AddSetDialogBinding.inflate(LayoutInflater.from(binding?.root?.context))
-            val dialog = AlertDialog.Builder(binding?.root?.context).run {
-                val setLastIndex = currExercise?.lastWeights?.lastIndex!!
-                var lastRepsVal:String
-                var lastWeightVal:String
-                    lastRepsVal = currExercise?.lastReps?.get(currIdx-1).toString()
-                    lastWeightVal = currExercise?.lastWeights?.get(currIdx-1).toString()
-                    setTitle("세트 ${currIdx} 결과")
-                    if(currIdx==setLastIndex)
-                    {
-                        lastRepsVal = currExercise?.lastReps?.get(currIdx).toString()
-                        lastWeightVal = currExercise?.lastWeights?.get(currIdx).toString()
-                        setTitle("세트 ${currIdx + 1} 결과")
-                        count++
-                        if(currIdx==setLastIndex&&count==1)
-                        {
-                            lastRepsVal = currExercise?.lastReps?.get(currIdx-1).toString()
-                            lastWeightVal = currExercise?.lastWeights?.get(currIdx-1).toString()
-                            setTitle("세트 ${currIdx} 결과")
-                        }
-
-
-
-
-                }
-
-                dialogBinding.etReps.hint = lastRepsVal
-                dialogBinding.etWeight.hint = lastWeightVal
-
-                dialogBinding.etReps.setText(lastRepsVal)
-                dialogBinding.etWeight.setText(lastWeightVal)
-
-
-                setView(dialogBinding.root)
-                setPositiveButton("설정하기", null)
-
-                show()
-            }
+            //예전 다이얼로그 띄우는 부분
         }
 
-        }
+    }
 
-        private fun viewMode(mode: String) {
-            if (mode == "start") {
-                binding?.startBtn?.isEnabled = false
-                binding?.stopBtn?.isEnabled = true
-                running = true
-            } else {
-                binding?.startBtn?.isEnabled = true
-                binding?.stopBtn?.isEnabled = false
-                binding?.addSetBtn?.isEnabled = true
-                running = false
-            }
+    private fun viewMode(mode: String) {
+        if (mode == "start") {
+            binding?.startBtn?.isEnabled = false
+            binding?.stopBtn?.isEnabled = true
+            running = true
+        } else {
+            binding?.startBtn?.isEnabled = true
+            binding?.stopBtn?.isEnabled = false
+            binding?.addSetBtn?.isEnabled = true
+            running = false
         }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
 }
-
-
-
-
