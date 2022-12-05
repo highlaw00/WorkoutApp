@@ -1,6 +1,10 @@
 package com.example.workoutapp2
 
-import android.app.AlertDialog
+import android.app.AlarmManager
+
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -8,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -19,6 +24,11 @@ import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import com.example.workoutapp2.WorkoutToDoAdapter
 class TimerFragment : Fragment(){
 
+    lateinit var mainActivity: MainActivity
+    override fun onAttach(context: Context) { //TImerFragment의 context를 가져오는 함수
+        super.onAttach(context)
+        mainActivity=context as MainActivity
+    }
     private val viewModel: ExerciseViewModel by activityViewModels()
 
     var binding: FragmentTimerBinding? = null
@@ -71,6 +81,18 @@ class TimerFragment : Fragment(){
                 viewMode("start")
 
             }
+
+            val intent= Intent(mainActivity, AlarmReceiver::class.java)
+            val pendingIntent=PendingIntent.getBroadcast(
+                mainActivity,0,intent,PendingIntent.FLAG_IMMUTABLE
+            )
+
+            getSystemService(mainActivity,AlarmManager::class.java)!!.setExact(
+                AlarmManager.RTC_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                pendingIntent
+            )
+
         }
         binding?.stopBtn?.setOnClickListener { // 휴식 중지 버튼
             if (running) {
