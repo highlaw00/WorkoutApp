@@ -2,22 +2,25 @@ package com.example.workoutapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.workoutapp2.databinding.ActivityMainBinding
-import com.example.workoutapp2.viewmodel.ExerciseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
+/**
+ * MainActivity.kt
+ * 1-1. 앱을 처음 사용한다면...
+ *      Android Device 별 Unique Id(UUID::class.java) 를 SharedPreference 로 저장합니다.
+ *
+ * 1-2. 앱을 사용한 적이 있다면...
+ *      저장한 UUID 를 Data 클래스인 DataBaseEntry 의 프로퍼티에 저장합니다.
+ *
+ * **/
+
 class MainActivity : AppCompatActivity() {
+
     lateinit var binding: ActivityMainBinding
     lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -51,9 +54,8 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        if (!checkKey()) DataBaseEntry.setUnni(makeKey())
-        else DataBaseEntry.setUnni(getKey())
-
+        if (!checkKey()) DataBaseStorage.setUnni(makeKey())
+        else DataBaseStorage.setUnni(getKey())
 
         setContentView(binding.root)
     }

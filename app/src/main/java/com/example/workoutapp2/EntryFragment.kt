@@ -12,9 +12,19 @@ import com.example.workoutapp2.databinding.FragmentEntryBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import java.time.format.DateTimeFormatter
 
+/**
+ *  EntryFragment.kt
+ *
+ *  1. 사용자가 날짜를 고른 뒤, 확인 버튼을 누르면 viewModel 에 해당 날짜를 전달합니다.
+ *
+ *  2. viewModel 에선 해당 날짜에 따라 todoList 를 observing 합니다.
+ *
+ **/
+
 class EntryFragment : Fragment() {
-    var binding: FragmentEntryBinding? = null
-    val viewModel: ExerciseViewModel by activityViewModels()
+    private var binding: FragmentEntryBinding? = null
+    private val viewModel: ExerciseViewModel by activityViewModels()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEntryBinding.inflate(inflater)
         return binding?.root

@@ -43,7 +43,9 @@
         tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_timerFragment_to_toDoFragment"
-            app:destination="@id/toDoFragment" />
+            app:destination="@id/toDoFragment"
+            app:popUpTo="@id/toDoFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/startFragment"

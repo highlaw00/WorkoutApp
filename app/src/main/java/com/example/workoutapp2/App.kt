@@ -14,13 +14,13 @@ class App:Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             getSystemService(NotificationManager::class.java).run{
 
                 val alertChannel =NotificationChannel(
                     ALERT_CHANNEL_ID,
                     "Alert Test",
-                    NotificationManager.IMPORTANCE_HIGH
+                    NotificationManager.IMPORTANCE_LOW
                 )
                 createNotificationChannel(alertChannel)
             }

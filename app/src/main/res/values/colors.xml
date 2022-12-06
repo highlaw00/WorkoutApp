@@ -12,4 +12,5 @@
     <color name="light_sky_blue">#87CEFA</color>
     <color name="slate_grey">#708090</color>
     <color name="dim_grey">#696969</color>
+    <color name="light_slate_grey">#778899</color>
 </resources>

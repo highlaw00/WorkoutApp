@@ -21,6 +21,17 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ *  AddFragment.kt
+ *
+ *  1. ViewPager2를 사용해 운동 별 Fragment 각각 Display 해줍니다.
+ *
+ *  2. 각 Fragment 내 RecyclerView 에서 todoList 에 운동 추가 및 삭제하는 Event 를 수신하는 Listener 를 설정합니다.
+ *  2-1. Listener 가 triggered 되면, Dialog 를 띄워 커스텀 운동을 Database 에 업데이트 합니다.
+ *
+ */
+
+
 class AddFragment : Fragment() {
     var binding: FragmentAddBinding? = null
     private val viewModel: ExerciseViewModel by activityViewModels()

@@ -19,7 +19,6 @@ class AddListAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Ad
         if (newList != null) {
             data?.addAll(newList)
         }
-        this.notifyDataSetChanged()
     }
 
     fun getItemByPosition(position: Int): Exercise? {

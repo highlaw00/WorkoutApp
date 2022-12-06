@@ -2,16 +2,14 @@ package com.example.workoutapp2
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workoutapp2.databinding.AddSetDialogBinding
 import com.example.workoutapp2.databinding.ListWorkoutTodoBinding
-import com.example.workoutapp2.viewmodel.ExerciseViewModel
 import java.util.*
 
 class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<WorkoutToDoAdapter.Holder>() {
@@ -30,6 +28,7 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
     class Holder(private val binding: ListWorkoutTodoBinding, private val listener: RecyclerViewOnClickListener) : RecyclerView.ViewHolder(binding.root) {
         var img = binding.ivWorkoutImage
         var name = binding.tvWorkoutName
+        var doneIcon = binding.ivDone
 
         private fun setSetAdapter(binding: ListWorkoutTodoBinding, exercise: Exercise) {
             binding.rvSetList.layoutManager = LinearLayoutManager(binding.root.context,LinearLayoutManager.VERTICAL,false)
@@ -47,16 +46,14 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
                 val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))
                 val dialog = AlertDialog.Builder(binding.root.context).run {
                     if (exercise.lastReps == null) {
-                        dialogBinding.etReps.hint = ""
-                        dialogBinding.etWeight.hint = ""
+                        dialogBinding.etReps.setText("")
+                        dialogBinding.etWeight.setText("")
                     } else {
                         val setLastIndex = exercise.lastWeights?.lastIndex!!
 
                         val lastRepsVal = exercise.lastReps?.get(setLastIndex).toString()
                         val lastWeightVal = exercise.lastWeights?.get(setLastIndex).toString()
 
-                        dialogBinding.etReps.hint = lastRepsVal
-                        dialogBinding.etWeight.hint = lastWeightVal
                         dialogBinding.etReps.setText(lastRepsVal)
                         dialogBinding.etWeight.setText(lastWeightVal)
                     }
@@ -101,11 +98,15 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
             }
         }
 
-        fun bind(exercise: Exercise, position: Int) {
+        fun bind(exercise: Exercise) {
             this.name.text = exercise.name
             this.img.setImageResource(exercise.img)
 
             setButtons(binding, exercise)
+
+            if (exercise.isDone == true) {
+                doneIcon.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -116,7 +117,7 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val exercise = data?.get(position)
-        if (exercise != null) holder.bind(exercise, position)
+        if (exercise != null) holder.bind(exercise)
     }
 
     override fun getItemCount(): Int {
@@ -129,7 +130,6 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
         if (newList != null) {
             data?.addAll(newList)
         }
-        this.notifyDataSetChanged()
     }
 
 

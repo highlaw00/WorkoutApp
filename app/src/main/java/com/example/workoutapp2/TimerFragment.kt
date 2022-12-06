@@ -1,9 +1,13 @@
 package com.example.workoutapp2
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.AlertDialog
+import android.app.Dialog
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
@@ -51,12 +55,12 @@ class TimerFragment : Fragment(){
         var currExercise = listToDo?.get(currIdx) //처음 운동에 대한 정보를 가져옴
         var setLastIndex = currExercise?.lastWeights?.lastIndex!! //처음 운동의 마지막세트
 
-
         fun getInformation(currExercise: Exercise?, currIdx:Int){ //운동 정보 저장 함수
             binding?.tvTimerWorkoutName?.text = currExercise?.name
             binding?.tvTimerWorkoutSet?.text = "세트 ${currIdx + 1}"
             binding?.tvTimerWorkoutWeight?.text = "${currExercise?.lastWeights?.get(currIdx)} kg"
             binding?.tvTimerWorkoutReps?.text = "${currExercise?.lastReps?.get(currIdx)} 회"
+            currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
         }
 
         fun ViewAndEnabled(visible1:Int,visible2:Int,visible3:Int,Enabled1:Boolean,Enabled2:Boolean,Enabled3:Boolean)
@@ -69,29 +73,31 @@ class TimerFragment : Fragment(){
             binding?.addSetBtn?.isEnabled=Enabled3
         }
 
-        currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
         getInformation(currExercise,currIdx) //처음 운동의 0번째 세트 정보로 저장
 
         viewMode("stop")
+
+//        val intent= Intent(mainActivity, AlarmReceiver::class.java)
+//        val pendingIntent=PendingIntent.getBroadcast(
+//            mainActivity,0, intent, PendingIntent.FLAG_IMMUTABLE
+//        )
 
         binding?.startBtn?.setOnClickListener { // 휴식 시작 버튼
             if (!running) {
                 binding?.chronometer!!.base = SystemClock.elapsedRealtime() - pauseTime
                 binding?.chronometer!!.start()
                 viewMode("start")
-
             }
+//            val repeatInterval: Long = 60 * 1000
+//            val triggerTime = SystemClock.elapsedRealtime() + repeatInterval
+//
+//            getSystemService(mainActivity, AlarmManager::class.java)!!.setRepeating(
+//                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                triggerTime,
+//                repeatInterval,
+//                pendingIntent
+//            )
 
-            val intent= Intent(mainActivity, AlarmReceiver::class.java)
-            val pendingIntent=PendingIntent.getBroadcast(
-                mainActivity,0,intent,PendingIntent.FLAG_IMMUTABLE
-            )
-
-            getSystemService(mainActivity,AlarmManager::class.java)!!.setExact(
-                AlarmManager.RTC_WAKEUP,
-                SystemClock.elapsedRealtime(),
-                pendingIntent
-            )
 
         }
         binding?.stopBtn?.setOnClickListener { // 휴식 중지 버튼
@@ -102,6 +108,7 @@ class TimerFragment : Fragment(){
 
                 viewMode("stop")
 
+//                getSystemService(mainActivity, AlarmManager::class.java)!!.cancel(pendingIntent)
             }
         }
         binding?.addSetBtn?.setOnClickListener { // 다음운동 버튼
@@ -113,8 +120,15 @@ class TimerFragment : Fragment(){
 
             viewMode("stop")
 
+//            getSystemService(mainActivity, AlarmManager::class.java)!!.cancel(pendingIntent)
 
             currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
+
+            binding?.let { binding ->
+                currExercise?. let { exercise ->
+                    this.makeDialog( binding, exercise, currIdx, currIdx == setLastIndex )
+                }
+            }
 
             if (currIdx== setLastIndex) { //현재 세트가 마지막 세트일 경우에
                 currIdx--
@@ -142,7 +156,6 @@ class TimerFragment : Fragment(){
 
             getInformation(currExercise,currIdx) //운동정보 저장
 
-
             if((exercise_count+1)==listToDo?.size && currIdx==setLastIndex){ //마지막 운동을 끝내고 마지막 세트도 끝냈을때
                 binding?.TheEnd?.text="수고하셨습니다.\n 설정하신 운동을 모두 끝냈습니다."
                 binding?.tothenext?.isEnabled=false
@@ -150,6 +163,43 @@ class TimerFragment : Fragment(){
 
             //예전 다이얼로그 띄우는 부분
         }
+
+    }
+
+    private fun makeDialog(binding: FragmentTimerBinding, exercise: Exercise, currentSetIdx: Int, isLastSet: Boolean) {
+        val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))
+        val dialog = AlertDialog.Builder(binding.root.context).run {
+
+            val repsVal = exercise.lastReps?.get(currentSetIdx).toString()
+            val weightVal = exercise.lastWeights?.get(currentSetIdx).toString()
+
+            dialogBinding.etReps.setText(repsVal)
+            dialogBinding.etWeight.setText(weightVal)
+
+            setView(dialogBinding.root)
+            setPositiveButton("확인", null)
+            show()
+        }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val inputReps: Int? = dialogBinding.etReps.text.toString().toIntOrNull()
+            val inputWeight: Double? = dialogBinding.etWeight.text.toString().toDoubleOrNull()
+
+            if (inputReps == null || inputWeight == null) {
+                Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
+            } else if (inputReps <= 0 || inputWeight <= 0.0) {
+                Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                exercise.lastReps?.set(currentSetIdx, inputReps)
+                exercise.lastWeights?.set(currentSetIdx, inputWeight)
+
+                if (isLastSet) {
+                    viewModel.updateSetByExercise(exercise)
+                }
+
+                dialog.dismiss()
+            }
+        }
+
 
     }
 

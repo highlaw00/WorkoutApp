@@ -22,6 +22,17 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ *  ToDoFragment.kt
+ *
+ *  1. 이전 EntryFragment 에서 todoList 를 observe 시작했기에 todoList 를 가져옵니다.
+ *
+ *  2. 가져온 todoList 를 RecyclerViewAdapter 와 연결합니다.
+ *
+ *  3. Adapter 와 연결한 뒤, 각 운동 별 삭제 및 순서 변경, 각 운동 별 세트 추가 및 삭제를 할 수 있도록 Listener 를 추가합니다.
+ *
+ */
+
 class ToDoFragment() : Fragment(){
     private val viewModel: ExerciseViewModel by activityViewModels()
     var binding: FragmentToDoBinding? = null
@@ -75,13 +86,12 @@ class ToDoFragment() : Fragment(){
         }
 
         ItemTouchHelper(itemTouchCallBack).attachToRecyclerView(binding?.rvTodoWorkoutList)
+
         viewModel.todoList.observe(viewLifecycleOwner) {
             listToDo = viewModel.todoList.value?.toMutableList()
             newAdapter.updateList(listToDo)
+            newAdapter.notifyDataSetChanged()
         }
-
-
-
 
         binding?.btnAdd?.setOnClickListener {
             findNavController().navigate(R.id.action_toDoFragment_to_addFragment)
@@ -90,7 +100,7 @@ class ToDoFragment() : Fragment(){
             if (viewModel.checkStartValidation()) {
                 findNavController().navigate(R.id.action_toDoFragment_to_timerFragment)
             } else {
-                Toast.makeText(this.context, "세트를 추가하지 않은 운동이 존재합니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context, "운동 및 세트를 추가해 주세요.", Toast.LENGTH_SHORT).show()
             }
         }
     }

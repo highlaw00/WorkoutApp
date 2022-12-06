@@ -97,4 +97,14 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_done"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_workout_name"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/tv_workout_name"
+        app:srcCompat="@drawable/ic_done" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

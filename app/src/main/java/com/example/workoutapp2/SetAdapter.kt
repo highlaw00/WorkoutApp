@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.workoutapp2.databinding.ListSetTodoBinding
 
 class SetAdapter(private val exercise: Exercise): RecyclerView.Adapter<SetAdapter.Holder>() {
-    // SetAdapter 는 lastReps, lastWeights 정보가 null이라면 생성되지 않습니다.
 
     class Holder(binding: ListSetTodoBinding): RecyclerView.ViewHolder(binding.root) {
         private val setString = binding.tvCurrentSet

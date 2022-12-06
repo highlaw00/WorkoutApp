@@ -15,8 +15,18 @@ import com.example.workoutapp2.databinding.FragmentAddBinding
 import com.example.workoutapp2.databinding.FragmentAddListBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
 
-class AddListFragment(val part: String) : Fragment() {
-    // 문자열을 하나 받아 추후 ViewModel에서 값을 가져옵니다.
+/**
+ * AddListFragment.kt
+ *
+ *  1. viewModel 에서 부분 별 운동 리스트를 가져와 Display 합니다.
+ *
+ *  2. 만약 viewModel 이 변경되면 observe 한 뒤 변경사항을 update 합니다.
+ *
+ *  3. 추가 버튼, 삭제 버튼에 대한 event 발생 시 handle 합니다.
+ */
+
+class AddListFragment(private val part: String) : Fragment() {
+
     var binding: FragmentAddListBinding? = null
     private val viewModel: ExerciseViewModel by activityViewModels()
 
@@ -32,7 +42,6 @@ class AddListFragment(val part: String) : Fragment() {
         binding?.rvMainWorkoutList?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding?.rvMainWorkoutList?.setHasFixedSize(true)
 
-        // adapter 연결
         listByPart = viewModel.getListByPart(part)
         var newAdapter = AddListAdapter(listByPart)
         binding?.rvMainWorkoutList?.adapter = newAdapter
@@ -48,8 +57,6 @@ class AddListFragment(val part: String) : Fragment() {
                         .show()
                     }
                     dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
-                        // 이미 있는 경우 방지 해야함
-                        // 만약 exercise의 isMainExercise가 true라면 custom/UUID/workoutInfo/exercise.name 에서 lastReps와 Weights를 가져옴
                         viewModel.addToDaily(exercise)
                         Toast.makeText(this@AddListFragment.context, "${exercise?.name} 운동이 추가되었습니다.", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
@@ -78,6 +85,7 @@ class AddListFragment(val part: String) : Fragment() {
         viewModel.wholeList.observe(viewLifecycleOwner) { wholeList ->
             listByPart = viewModel.getListByPart(part)
             newAdapter.updateList(listByPart)
+            newAdapter.notifyDataSetChanged()
         }
     }
     override fun onDestroyView() {
