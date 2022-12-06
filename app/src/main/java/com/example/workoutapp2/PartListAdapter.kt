@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workoutapp2.databinding.ListWorkoutMainBinding
 
-class AddListAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<AddListAdapter.Holder>() {
+class PartListAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Adapter<PartListAdapter.Holder>() {
 
     private lateinit var myListener: RecyclerViewOnClickListener
 
@@ -52,7 +52,6 @@ class AddListAdapter(private val data: MutableList<Exercise>?) : RecyclerView.Ad
             img.setImageResource(exercise.img)
 
             // 메인 리스템의 아이템이 만약 custom에 속한다면 x버튼을 보입니다.
-
             if (exercise.isMainExercise == false) {
                 removeBtn.visibility = View.VISIBLE
                 removeBtn.setOnClickListener {

@@ -85,9 +85,6 @@ class ExerciseViewModel: ViewModel() {
     fun deleteLastSet(position: Int) {
         val viewModelExercise = _todoList.value?.get(position)
         val lastIdx = viewModelExercise?.lastReps?.lastIndex
-        // null을 가르키고 있는 경우 lastIdx마저 null이 된다.
-        // size가 1 이상인 배열을 가르키는 경우 lastIdx는 마지막 인덱스를 가리킨다.
-        // delete로 들어올 때는 exercise.lastReps가 null일 수 없다.
         if (lastIdx != -1) {
             viewModelExercise?.lastReps?.removeAt(lastIdx!!)
             viewModelExercise?.lastWeights?.removeAt(lastIdx!!)

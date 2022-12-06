@@ -5,13 +5,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewpagerFragmentAdapter(parentFragment: Fragment) : FragmentStateAdapter(parentFragment){
     private val fragmentList = listOf<Fragment>(
-                AddListFragment("All"),
-                AddListFragment("Chest"),
-                AddListFragment("Back"),
-                AddListFragment("Arm"),
-                AddListFragment("Delts"),
-                AddListFragment("Legs"),
-                AddListFragment("Abs"))
+                PartListFragment("All"),
+                PartListFragment("Chest"),
+                PartListFragment("Back"),
+                PartListFragment("Arm"),
+                PartListFragment("Delts"),
+                PartListFragment("Legs"),
+                PartListFragment("Abs"))
 
 
     override fun getItemCount(): Int {

@@ -88,15 +88,6 @@ class TimerFragment : Fragment(){
                 binding?.chronometer!!.start()
                 viewMode("start")
             }
-//            val repeatInterval: Long = 60 * 1000
-//            val triggerTime = SystemClock.elapsedRealtime() + repeatInterval
-//
-//            getSystemService(mainActivity, AlarmManager::class.java)!!.setRepeating(
-//                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                triggerTime,
-//                repeatInterval,
-//                pendingIntent
-//            )
 
 
         }
@@ -108,7 +99,6 @@ class TimerFragment : Fragment(){
 
                 viewMode("stop")
 
-//                getSystemService(mainActivity, AlarmManager::class.java)!!.cancel(pendingIntent)
             }
         }
         binding?.addSetBtn?.setOnClickListener { // 다음운동 버튼
@@ -119,8 +109,6 @@ class TimerFragment : Fragment(){
             binding?.chronometer?.stop()
 
             viewMode("stop")
-
-//            getSystemService(mainActivity, AlarmManager::class.java)!!.cancel(pendingIntent)
 
             currExercise?.img?.let { binding?.ivTimerWorkoutImage?.setImageResource(it) }
 
@@ -160,8 +148,6 @@ class TimerFragment : Fragment(){
                 binding?.TheEnd?.text="수고하셨습니다.\n 설정하신 운동을 모두 끝냈습니다."
                 binding?.tothenext?.isEnabled=false
             }
-
-            //예전 다이얼로그 띄우는 부분
         }
 
     }

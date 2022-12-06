@@ -32,9 +32,6 @@ class EntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // main List 설정
-
-        // entry fragment 단계에서 db에 todoList
         binding?.btnEntryOk?.setOnClickListener {
             val datePicker = binding?.dpEntryDp
             val currentSelectedDate = "${datePicker?.year.toString()}-${(datePicker?.month?.plus(1)).toString()}-${datePicker?.dayOfMonth.toString()}"

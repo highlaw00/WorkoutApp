@@ -59,38 +59,42 @@ class AddFragment : Fragment() {
         }
 
         binding?.btnAddToDb?.setOnClickListener {
-            val dialogBinding = AddDialogBinding.inflate(layoutInflater)
-            val dialog = this.context?.let { it1 ->
-                AlertDialog.Builder(it1).run {
-                    setView(dialogBinding.root)
-                    setPositiveButton("추가", null)
-                    setNegativeButton("취소", null)
-                    show()
-                }
+            this.makeDialog()
+        }
+    }
+
+    private fun makeDialog() {
+        val dialogBinding = AddDialogBinding.inflate(layoutInflater)
+        val dialog = this.context?.let { it1 ->
+            AlertDialog.Builder(it1).run {
+                setView(dialogBinding.root)
+                setPositiveButton("추가", null)
+                setNegativeButton("취소", null)
+                show()
             }
-            dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
-                val name = dialogBinding.etName.text.toString()
-                val partId = dialogBinding.rgPart.checkedRadioButtonId
-                if (name.isNotBlank() and (partId != -1)){
-                    val partString = when (dialogBinding.rgPart.findViewById<RadioButton>(partId).text) {
-                        "가슴" -> "Chest"
-                        "등" -> "Back"
-                        "팔" -> "Arm"
-                        "어깨" -> "Delts"
-                        "하체" -> "Legs"
-                        "복근" -> "Abs"
-                        else -> "Undefined"
-                    }
-                    val newExercise = Exercise(name = name, part = partString, isMainExercise = false)
-                    if (viewModel.isValid(newExercise)) {
-                        viewModel.addToCustom(newExercise)
-                        dialog?.dismiss()
-                    }else {
-                        Toast.makeText(this.context, "이미 존재하는 운동입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this.context, "운동의 이름과 부위를 선택해주세요.", Toast.LENGTH_SHORT).show()
+        }
+        dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
+            val name = dialogBinding.etName.text.toString()
+            val partId = dialogBinding.rgPart.checkedRadioButtonId
+            if (name.isNotBlank() and (partId != -1)){
+                val partString = when (dialogBinding.rgPart.findViewById<RadioButton>(partId).text) {
+                    "가슴" -> "Chest"
+                    "등" -> "Back"
+                    "팔" -> "Arm"
+                    "어깨" -> "Delts"
+                    "하체" -> "Legs"
+                    "복근" -> "Abs"
+                    else -> "Undefined"
                 }
+                val newExercise = Exercise(name = name, part = partString, isMainExercise = false, isDone = false)
+                if (viewModel.isValid(newExercise)) {
+                    viewModel.addToCustom(newExercise)
+                    dialog.dismiss()
+                }else {
+                    Toast.makeText(this.context, "이미 존재하는 운동입니다.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this.context, "운동의 이름과 부위를 선택해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
     }

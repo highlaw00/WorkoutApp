@@ -37,60 +37,61 @@ class WorkoutToDoAdapter(private val data: MutableList<Exercise>?) : RecyclerVie
             binding.rvSetList.adapter = newAdapter
         }
 
+        private fun makeDialog(exercise: Exercise) {
+            // set를 modify 합니다.
+            // 이때 modify 된 set는 운동이 완료된 후 viewModel 에 업데이트합니다.
+            val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))
+            val dialog = AlertDialog.Builder(binding.root.context).run {
+                if (exercise.lastReps == null) {
+                    dialogBinding.etReps.setText("")
+                    dialogBinding.etWeight.setText("")
+                } else {
+                    val setLastIndex = exercise.lastWeights?.lastIndex!!
+
+                    val lastRepsVal = exercise.lastReps?.get(setLastIndex).toString()
+                    val lastWeightVal = exercise.lastWeights?.get(setLastIndex).toString()
+
+                    dialogBinding.etReps.setText(lastRepsVal)
+                    dialogBinding.etWeight.setText(lastWeightVal)
+                }
+                setView(dialogBinding.root)
+                setPositiveButton("추가", null)
+                setNegativeButton("취소", null)
+                show()
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+
+                val inputReps: Int? = dialogBinding.etReps.text.toString().toIntOrNull()
+                val inputWeight: Double? = dialogBinding.etWeight.text.toString().toDoubleOrNull()
+
+                if (inputReps == null || inputWeight == null) {
+                    Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                } else if (inputReps <= 0 || inputWeight <= 0.0) {
+                    Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (exercise.lastReps == null && exercise.lastWeights == null) {
+                        listener.onSetClick(adapterPosition, CommandSymbol.ADD, inputReps, inputWeight)
+                        setSetAdapter(binding, exercise)
+                    } else {
+                        listener.onSetClick(adapterPosition, CommandSymbol.ADD, inputReps, inputWeight)
+                        binding.rvSetList.adapter?.notifyDataSetChanged()
+                    }
+                    dialog.dismiss()
+                }
+            }
+        }
+
         private fun setButtons(binding: ListWorkoutTodoBinding, exercise: Exercise) {
             if (exercise.lastReps != null) setSetAdapter(binding, exercise)
 
             binding.addSetBtn.setOnClickListener {
-                // set를 modify 합니다.
-                // 이때 modify 된 set는 운동이 완료된 후 viewModel 에 업데이트합니다.
-                val dialogBinding = AddSetDialogBinding.inflate(LayoutInflater.from(binding.root.context))
-                val dialog = AlertDialog.Builder(binding.root.context).run {
-                    if (exercise.lastReps == null) {
-                        dialogBinding.etReps.setText("")
-                        dialogBinding.etWeight.setText("")
-                    } else {
-                        val setLastIndex = exercise.lastWeights?.lastIndex!!
-
-                        val lastRepsVal = exercise.lastReps?.get(setLastIndex).toString()
-                        val lastWeightVal = exercise.lastWeights?.get(setLastIndex).toString()
-
-                        dialogBinding.etReps.setText(lastRepsVal)
-                        dialogBinding.etWeight.setText(lastWeightVal)
-                    }
-                    setView(dialogBinding.root)
-                    setPositiveButton("추가", null)
-                    setNegativeButton("취소", null)
-                    show()
-                }
-
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-
-                    val inputReps: Int? = dialogBinding.etReps.text.toString().toIntOrNull()
-                    val inputWeight: Double? = dialogBinding.etWeight.text.toString().toDoubleOrNull()
-
-                    if (inputReps == null || inputWeight == null) {
-                        Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    } else if (inputReps <= 0 || inputWeight <= 0.0) {
-                        Toast.makeText(binding.root.context, "입력 값을 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (exercise.lastReps == null && exercise.lastWeights == null) {
-                            listener.onSetClick(adapterPosition, CommandSymbol.ADD, inputReps, inputWeight)
-                            setSetAdapter(binding, exercise)
-                        } else {
-                            listener.onSetClick(adapterPosition, CommandSymbol.ADD, inputReps, inputWeight)
-                            binding.rvSetList.adapter?.notifyDataSetChanged()
-                        }
-                        dialog.dismiss()
-                    }
-                }
+                this.makeDialog(exercise)
             }
 
             binding.btnSetRemove.setOnClickListener {
                 if (exercise.lastReps == null && exercise.lastWeights == null)
                     Toast.makeText(binding.root.context, "추가된 세트가 없습니다.", Toast.LENGTH_SHORT).show()
-                else if (exercise.lastReps?.size == 1 && exercise.lastWeights?.size == 1){
-                    Toast.makeText(binding.root.context, "첫 번째 세트는 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
                 else {
                     listener.onSetClick(adapterPosition, CommandSymbol.REMOVE, 0, 0.0)
                     binding.rvSetList.adapter?.notifyDataSetChanged()

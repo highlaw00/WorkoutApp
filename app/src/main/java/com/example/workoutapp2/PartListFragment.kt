@@ -11,12 +11,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.workoutapp2.databinding.FragmentAddBinding
 import com.example.workoutapp2.databinding.FragmentAddListBinding
 import com.example.workoutapp2.viewmodel.ExerciseViewModel
 
 /**
- * AddListFragment.kt
+ * PartListFragment.kt
  *
  *  1. viewModel 에서 부분 별 운동 리스트를 가져와 Display 합니다.
  *
@@ -25,7 +24,7 @@ import com.example.workoutapp2.viewmodel.ExerciseViewModel
  *  3. 추가 버튼, 삭제 버튼에 대한 event 발생 시 handle 합니다.
  */
 
-class AddListFragment(private val part: String) : Fragment() {
+class PartListFragment(private val part: String) : Fragment() {
 
     var binding: FragmentAddListBinding? = null
     private val viewModel: ExerciseViewModel by activityViewModels()
@@ -43,14 +42,14 @@ class AddListFragment(private val part: String) : Fragment() {
         binding?.rvMainWorkoutList?.setHasFixedSize(true)
 
         listByPart = viewModel.getListByPart(part)
-        var newAdapter = AddListAdapter(listByPart)
+        var newAdapter = PartListAdapter(listByPart)
         binding?.rvMainWorkoutList?.adapter = newAdapter
 
         newAdapter.setRecyclerViewOnClickListener(object:  RecyclerViewOnClickListener{
             override fun onItemClick(position: Int, command: CommandSymbol) {
                 val exercise = newAdapter.getItemByPosition(position)
                 if (command == CommandSymbol.ADD) {
-                    val dialog = this@AddListFragment.context?.let { AlertDialog.Builder(it)
+                    val dialog = this@PartListFragment.context?.let { AlertDialog.Builder(it)
                         .setMessage("오늘 할 운동에 추가할까요?: ${exercise?.name}")
                         .setPositiveButton("추가", null)
                         .setNegativeButton("취소", null)
@@ -58,11 +57,11 @@ class AddListFragment(private val part: String) : Fragment() {
                     }
                     dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
                         viewModel.addToDaily(exercise)
-                        Toast.makeText(this@AddListFragment.context, "${exercise?.name} 운동이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PartListFragment.context, "${exercise?.name} 운동이 추가되었습니다.", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
                 }else {
-                    val dialog = this@AddListFragment.context?.let { AlertDialog.Builder(it)
+                    val dialog = this@PartListFragment.context?.let { AlertDialog.Builder(it)
                         .setMessage("이 운동을 리스트에서 삭제할까요?: ${newAdapter.getItemByPosition(position)?.name}")
                         .setPositiveButton("삭제", null)
                         .setNegativeButton("취소", null)
@@ -70,7 +69,7 @@ class AddListFragment(private val part: String) : Fragment() {
                     }
                     dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
                         viewModel.removeFromCustom(exercise)
-                        Toast.makeText(this@AddListFragment.context, "${exercise?.name} 운동이 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PartListFragment.context, "${exercise?.name} 운동이 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
                 }

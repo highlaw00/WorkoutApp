@@ -16,7 +16,6 @@ import java.util.*
  *
  * 1-2. 앱을 사용한 적이 있다면...
  *      저장한 UUID 를 Data 클래스인 DataBaseEntry 의 프로퍼티에 저장합니다.
- *
  * **/
 
 class MainActivity : AppCompatActivity() {

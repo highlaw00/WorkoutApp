@@ -5,7 +5,7 @@
     android:id="@+id/add_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".AddListFragment">
+    tools:context=".PartListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
